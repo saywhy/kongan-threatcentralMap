@@ -1,247 +1,349 @@
 <template>
-    <div class="home">
-        <span class="icon_full" @click="getFullCreeen" v-if="full_if">
-            <img v-if="full_if" src="../assets/img/full.png" alt="">
-            <span class="full_text">
-                {{fun_text}}
-            </span>
-        </span>
-        <div class="main">
-            <p class="main_top">威胁情报</p>
-            <div class="main_bom">
-                <div class="main_bom_item">
-                    <p class="main_bom_item_text">情报总数
-                        <span>{{total_unit.total_intelligence_num_unit}}</span>
-                    </p>
-                    <p class="main_bom_item_num">
-                        <span v-for=" item in total_intelligence_num" class="main_bom_item_num_span">{{item}}</span>
-                    </p>
-                </div>
-                <div class="main_bom_item">
-                    <p class="main_bom_item_text">互联网资产总数
-                        <span>{{total_unit.total_net_assets_unit}}</span>
-                    </p>
-                    <p class="main_bom_item_num">
-                        <span v-for=" item in total_net_assets" class="main_bom_item_num_span">{{item}}</span>
-                    </p>
-                </div>
-                <div class="main_bom_item">
-                    <p class="main_bom_item_text">风险资产总数
-                        <span>{{total_unit.total_risk_attack_unit}}</span>
-                    </p>
-                    <p class="main_bom_item_num">
-                        <span v-for=" item in total_risk_attack" class="main_bom_item_num_span">{{item}}</span>
-                    </p>
-                </div>
-                <div class="main_bom_item">
-                    <p class="main_bom_item_text">威胁预警总数
-                        <span>{{total_unit.total_threat_warning_unit}}</span>
-                    </p>
-                    <p class="main_bom_item_num">
-                        <span v-for=" item in total_threat_warning" class="main_bom_item_num_span">{{item}}</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="title">
-        </div>
-        <!-- 主要内容 -->
-        <div class="container">
-            <!-- 左边 -->
-            <div class="content_left">
-                <!-- 左上 -->
-                <div class="content_left_top item_common">
-                    <img class="border_line_left" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_mid" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_right" src="../assets/img/border_line.png" alt="">
-                    <div class="title_top">
-                        <img src="../assets/img/title_icon.png" alt="">
-                        <span>威胁概览</span>
-                    </div>
-                    <div class="content_left_top_left">
-                        <div id="pie_left"></div>
-                    </div>
-                    <div class="content_left_top_right">
-                        <div id="pie_right"></div>
-                    </div>
-                </div>
-                <!-- 左中 -->
-                <div class="content_left_mid item_common">
-                    <img class="border_line_left" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_right" src="../assets/img/border_line.png" alt="">
-                    <div class="title_top">
-                        <img src="../assets/img/title_icon.png" alt="">
-                        <span>预警统计</span>
-                    </div>
-                    <div class="content_left_mid_mid">
-                        <div class="alarm_top">
-                            <div class="alarm_item alarm_item_name">
-                                <span>信誉预警</span>
-                            </div>
-                            <div class="alarm_item alarm_item_echarts" id="alarm_type_f"></div>
-                            <div class="alarm_item alarm_item_num">
-                                <span>{{main_warning_data.total.alert}}</span>
-                            </div>
-                        </div>
-                        <div class="alarm_mid">
-                            <div class="alarm_item alarm_item_name">
-                                <span>漏洞预警</span>
-                            </div>
-                            <div class="alarm_item alarm_item_echarts" id="alarm_type_s"></div>
-                            <div class="alarm_item alarm_item_num">
-                                <span>{{main_warning_data.total.loophole}}</span>
-                            </div>
-                        </div>
-                        <div class="alarm_bom">
-                            <div class="alarm_item alarm_item_name">
-                                <span>暗网预警</span>
-                            </div>
-                            <div class="alarm_item alarm_item_echarts" id="alarm_type_t"></div>
-                            <div class="alarm_item alarm_item_num">
-                                <span>{{main_warning_data.total.darknet}}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content_left_mid_bom">
-                        <div class="top_bg">
-                            <el-row :gutter="0" style="border-bottom:1px solid #6A81B0;">
-                                <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :offset="8">
-                                    <span>威胁信誉预警</span>
-                                </el-col>
-                                <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-                                    <span>漏洞预警</span>
-                                </el-col>
-                            </el-row>
-                        </div>
-                        <div class="bom_bg">
-                            <el-row :gutter="0">
-                                <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-                                    <span>{{alarmTypeData.name}} </span>
-                                </el-col>
-                                <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-                                    <span>{{main_warning_data.effect_assets.alert}}</span>
-                                </el-col>
-                                <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-                                    <span>{{main_warning_data.effect_assets.high_loophole}}</span>
-                                </el-col>
-                            </el-row>
-                        </div>
-                    </div>
-                </div>
-                <!-- 左下 -->
-                <div class="content_left_bom item_common">
-                    <img class="border_line_left" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_right" src="../assets/img/border_line.png" alt="">
-                    <div class="title_top">
-                        <img src="../assets/img/title_icon.png" alt="">
-                        <span>威胁态势</span>
-                        <div class="risk_trend" id="risk_trend">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 中间 -->
-            <div class="content_mid">
-                <div class="box_map_bg">
-                    <div class="map_img_bg">
-                    </div>
-                    <div class="content_mid_map" id="china_map">
-                    </div>
-                </div>
-
-                <div class="content_mid_bom">
-                    <div class="content_mid_bom_top">
-                        <el-row :gutter="0">
-                            <el-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16">
-                                <p>情报更新和预警</p>
-                            </el-col>
-                            <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-                                <p>预警扩展和关联</p>
-                            </el-col>
-                        </el-row>
-                    </div>
-                    <div class="content_mid_bom_bom">
-                        <div class="left">
-                            <div class="block_left_content">
-                                <span class="left_item" v-for="item in real_time_threat" :class="item.threat?'mao_box_red':''">
-                                    {{item.name}}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="mid">
-                        </div>
-                        <div class="right" id="info_relation">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 右边 -->
-            <div class="content_right">
-                <!-- 右上 -->
-                <div class="content_right_top item_common">
-                    <img class="border_line_left" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_right" src="../assets/img/border_line.png" alt="">
-                    <div class="title_top">
-                        <img src="../assets/img/title_icon.png" alt="">
-                        <span>全球威胁动态</span>
-                    </div>
-                    <div class="bom" style="height: 218px;overflow: hidden;">
-                        <div class="swiper_box" ref="goodSwiper">
-                            <div class="swiper-container">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide " v-for="(item,index) in newsData" v-bind:key="item.name">
-                                        <div class="bom_item list-item">
-                                            <img class="bar_left" src="../assets/img/bar_left.png" alt="">
-                                            <p class="item_top">
-                                                <img src="../assets/img/li_title.png" alt="">
-                                                <span>{{item.name}}</span>
-                                            </p>
-                                            <p class="item_bom">
-                                                <span>{{item.time}}</span>
-                                                <!-- <span>{{index}}</span> -->
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 右中 -->
-                <div class=" content_right_mid item_common">
-                    <img class="border_line_left" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_right" src="../assets/img/border_line.png" alt="">
-                    <div class="title_top">
-                        <img src="../assets/img/title_icon.png" alt="">
-                        <span>威胁分布</span>
-                    </div>
-                    <div class="threat_content" id="threat">
-                    </div>
-                </div>
-                <!-- 右下 -->
-                <div class=" content_right_bom item_common">
-                    <img class="border_line_left" src="../assets/img/border_line.png" alt="">
-                    <img class="border_line_right" src="../assets/img/border_line.png" alt="">
-                    <div class="title_top">
-                        <img src="../assets/img/title_icon.png" alt="">
-                        <span>威胁排行</span>
-                    </div>
-                    <div>
-                        <el-table :data="tableData" style="width: 100%;" :row-style="rowClass" :show-overflow-tooltip="true">
-                            <el-table-column prop="ip" label="资产名称" :show-overflow-tooltip="true">
-                            </el-table-column>
-                            <el-table-column prop="type" label="类型" :show-overflow-tooltip="true">
-                            </el-table-column>
-                            <el-table-column prop="num" label="威胁数量" :show-overflow-tooltip="true">
-                            </el-table-column>
-                            <el-table-column prop="src" label="归属" :show-overflow-tooltip="true">
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="home">
+    <div style="width: 200px;position: absolute;left: 0;top: 0;">
+      <img src="../common/image/kongan.png"
+           alt=""
+           height="50">
     </div>
+    <span class="icon_full"
+          @click="getFullCreeen"
+          v-if="full_if">
+      <img v-if="full_if"
+           src="../assets/img/full.png"
+           alt="">
+      <span class="full_text">
+        {{fun_text}}
+      </span>
+    </span>
+    <div class="main">
+      <p class="main_top">威胁情报</p>
+      <div class="main_bom">
+        <div class="main_bom_item">
+          <p class="main_bom_item_text">情报总数
+            <span>{{total_unit.total_intelligence_num_unit}}</span>
+          </p>
+          <p class="main_bom_item_num">
+            <span v-for=" item in total_intelligence_num"
+                  class="main_bom_item_num_span">{{item}}</span>
+          </p>
+        </div>
+        <div class="main_bom_item">
+          <p class="main_bom_item_text">互联网资产总数
+            <span>{{total_unit.total_net_assets_unit}}</span>
+          </p>
+          <p class="main_bom_item_num">
+            <span v-for=" item in total_net_assets"
+                  class="main_bom_item_num_span">{{item}}</span>
+          </p>
+        </div>
+        <div class="main_bom_item">
+          <p class="main_bom_item_text">风险资产总数
+            <span>{{total_unit.total_risk_attack_unit}}</span>
+          </p>
+          <p class="main_bom_item_num">
+            <span v-for=" item in total_risk_attack"
+                  class="main_bom_item_num_span">{{item}}</span>
+          </p>
+        </div>
+        <div class="main_bom_item">
+          <p class="main_bom_item_text">威胁预警总数
+            <span>{{total_unit.total_threat_warning_unit}}</span>
+          </p>
+          <p class="main_bom_item_num">
+            <span v-for=" item in total_threat_warning"
+                  class="main_bom_item_num_span">{{item}}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="title">
+    </div>
+    <!-- 主要内容 -->
+    <div class="container">
+      <!-- 左边 -->
+      <div class="content_left">
+        <!-- 左上 -->
+        <div class="content_left_top item_common">
+          <img class="border_line_left"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_mid"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_right"
+               src="../assets/img/border_line.png"
+               alt="">
+          <div class="title_top">
+            <img src="../assets/img/title_icon.png"
+                 alt="">
+            <span>威胁概览</span>
+          </div>
+          <div class="content_left_top_left">
+            <div id="pie_left"></div>
+          </div>
+          <div class="content_left_top_right">
+            <div id="pie_right"></div>
+          </div>
+        </div>
+        <!-- 左中 -->
+        <div class="content_left_mid item_common">
+          <img class="border_line_left"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_right"
+               src="../assets/img/border_line.png"
+               alt="">
+          <div class="title_top">
+            <img src="../assets/img/title_icon.png"
+                 alt="">
+            <span>预警统计</span>
+          </div>
+          <div class="content_left_mid_mid">
+            <div class="alarm_top">
+              <div class="alarm_item alarm_item_name">
+                <span>信誉预警</span>
+              </div>
+              <div class="alarm_item alarm_item_echarts"
+                   id="alarm_type_f"></div>
+              <div class="alarm_item alarm_item_num">
+                <span>{{main_warning_data.total.alert}}</span>
+              </div>
+            </div>
+            <div class="alarm_mid">
+              <div class="alarm_item alarm_item_name">
+                <span>漏洞预警</span>
+              </div>
+              <div class="alarm_item alarm_item_echarts"
+                   id="alarm_type_s"></div>
+              <div class="alarm_item alarm_item_num">
+                <span>{{main_warning_data.total.loophole}}</span>
+              </div>
+            </div>
+            <div class="alarm_bom">
+              <div class="alarm_item alarm_item_name">
+                <span>暗网预警</span>
+              </div>
+              <div class="alarm_item alarm_item_echarts"
+                   id="alarm_type_t"></div>
+              <div class="alarm_item alarm_item_num">
+                <span>{{main_warning_data.total.darknet}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="content_left_mid_bom">
+            <div class="top_bg">
+              <el-row :gutter="0"
+                      style="border-bottom:1px solid #6A81B0;">
+                <el-col :xs="8"
+                        :sm="8"
+                        :md="8"
+                        :lg="8"
+                        :xl="8"
+                        :offset="8">
+                  <span>威胁信誉预警</span>
+                </el-col>
+                <el-col :xs="8"
+                        :sm="8"
+                        :md="8"
+                        :lg="8"
+                        :xl="8">
+                  <span>漏洞预警</span>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="bom_bg">
+              <el-row :gutter="0">
+                <el-col :xs="8"
+                        :sm="8"
+                        :md="8"
+                        :lg="8"
+                        :xl="8">
+                  <span>{{alarmTypeData.name}} </span>
+                </el-col>
+                <el-col :xs="8"
+                        :sm="8"
+                        :md="8"
+                        :lg="8"
+                        :xl="8">
+                  <span>{{main_warning_data.effect_assets.alert}}</span>
+                </el-col>
+                <el-col :xs="8"
+                        :sm="8"
+                        :md="8"
+                        :lg="8"
+                        :xl="8">
+                  <span>{{main_warning_data.effect_assets.high_loophole}}</span>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+        </div>
+        <!-- 左下 -->
+        <div class="content_left_bom item_common">
+          <img class="border_line_left"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_right"
+               src="../assets/img/border_line.png"
+               alt="">
+          <div class="title_top">
+            <img src="../assets/img/title_icon.png"
+                 alt="">
+            <span>威胁态势</span>
+            <div class="risk_trend"
+                 id="risk_trend">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 中间 -->
+      <div class="content_mid">
+        <div class="box_map_bg">
+          <div class="map_img_bg">
+          </div>
+          <div class="content_mid_map"
+               id="china_map">
+          </div>
+        </div>
+
+        <div class="content_mid_bom">
+          <div class="content_mid_bom_top">
+            <el-row :gutter="0">
+              <el-col :xs="16"
+                      :sm="16"
+                      :md="16"
+                      :lg="16"
+                      :xl="16">
+                <p>情报更新和预警</p>
+              </el-col>
+              <el-col :xs="8"
+                      :sm="8"
+                      :md="8"
+                      :lg="8"
+                      :xl="8">
+                <p>预警扩展和关联</p>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="content_mid_bom_bom">
+            <div class="left">
+              <div class="block_left_content">
+                <span class="left_item"
+                      v-for="item in real_time_threat"
+                      :class="item.threat?'mao_box_red':''">
+                  {{item.name}}
+                </span>
+              </div>
+            </div>
+            <div class="mid">
+            </div>
+            <div class="right"
+                 id="info_relation">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 右边 -->
+      <div class="content_right">
+        <!-- 右上 -->
+        <div class="content_right_top item_common">
+          <img class="border_line_left"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_right"
+               src="../assets/img/border_line.png"
+               alt="">
+          <div class="title_top">
+            <img src="../assets/img/title_icon.png"
+                 alt="">
+            <span>全球威胁动态</span>
+          </div>
+          <div class="bom"
+               style="height: 218px;overflow: hidden;">
+            <div class="swiper_box"
+                 ref="goodSwiper">
+              <div class="swiper-container">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide "
+                       v-for="(item,index) in newsData"
+                       v-bind:key="item.name">
+                    <div class="bom_item list-item">
+                      <img class="bar_left"
+                           src="../assets/img/bar_left.png"
+                           alt="">
+                      <p class="item_top">
+                        <img src="../assets/img/li_title.png"
+                             alt="">
+                        <span>{{item.name}}</span>
+                      </p>
+                      <p class="item_bom">
+                        <span>{{item.time}}</span>
+                        <!-- <span>{{index}}</span> -->
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 右中 -->
+        <div class=" content_right_mid item_common">
+          <img class="border_line_left"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_right"
+               src="../assets/img/border_line.png"
+               alt="">
+          <div class="title_top">
+            <img src="../assets/img/title_icon.png"
+                 alt="">
+            <span>威胁分布</span>
+          </div>
+          <div class="threat_content"
+               id="threat">
+          </div>
+        </div>
+        <!-- 右下 -->
+        <div class=" content_right_bom item_common">
+          <img class="border_line_left"
+               src="../assets/img/border_line.png"
+               alt="">
+          <img class="border_line_right"
+               src="../assets/img/border_line.png"
+               alt="">
+          <div class="title_top">
+            <img src="../assets/img/title_icon.png"
+                 alt="">
+            <span>威胁排行</span>
+          </div>
+          <div>
+            <el-table :data="tableData"
+                      style="width: 100%;"
+                      :row-style="rowClass"
+                      :show-overflow-tooltip="true">
+              <el-table-column prop="ip"
+                               label="资产名称"
+                               :show-overflow-tooltip="true">
+              </el-table-column>
+              <el-table-column prop="type"
+                               label="类型"
+                               :show-overflow-tooltip="true">
+              </el-table-column>
+              <el-table-column prop="num"
+                               label="威胁数量"
+                               :show-overflow-tooltip="true">
+              </el-table-column>
+              <el-table-column prop="src"
+                               label="归属"
+                               :show-overflow-tooltip="true">
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <style  lang="less">
 .home {
@@ -666,7 +768,7 @@
         .el-table--border::after,
         .el-table--group::after,
         .el-table::before {
-          content: "";
+          content: '';
           position: absolute;
           background-color: #ebeef5;
           z-index: -1;
@@ -687,7 +789,7 @@ import Swiper from "swiper";
 // import { formatDate } from 'common/date.js';
 export default {
   name: "home",
-  data() {
+  data () {
     return {
       // 情报总数
       total_intelligence_num: [0],
@@ -750,8 +852,8 @@ export default {
       default: 9000
     }
   },
-  created() {},
-  mounted() {
+  created () { },
+  mounted () {
     // 检测最新告警
     this.check_alert();
     // 左上
@@ -788,12 +890,12 @@ export default {
     }, 5000);
   },
   watch: {
-    newsData() {
+    newsData () {
       // console.log(this.newsData);
     }
   },
   methods: {
-    unit_common(num) {
+    unit_common (num) {
       var obj = {};
       if (num < 10000) {
         obj.num = num + "";
@@ -810,7 +912,7 @@ export default {
       return obj;
     },
     // 情报总数
-    total_intelligence_num_get() {
+    total_intelligence_num_get () {
       // this.$axios.get('https://47.105.196.251/demonstration/intelligence-count ')
       this.$axios
         .get("/demonstration/intelligence-count ")
@@ -829,7 +931,7 @@ export default {
         });
     },
     // 风险资产总数
-    total_risk_attack_get() {
+    total_risk_attack_get () {
       // this.$axios.get('https://47.105.196.251/demonstration/risk-assets-count')
       this.$axios
         .get("/demonstration/risk-assets-count")
@@ -848,7 +950,7 @@ export default {
         });
     },
     // 威胁预警总数
-    threat_warning_count() {
+    threat_warning_count () {
       this.$axios
         .get("/demonstration/threat-warning-count")
         // this.$axios.get('https://47.105.196.251/demonstration/threat-warning-count')
@@ -867,7 +969,7 @@ export default {
         });
     },
     // 互联网总数
-    internet_assets_count() {
+    internet_assets_count () {
       this.$axios
         .get("/demonstration/internet-assets-count")
         // this.$axios.get('https://47.105.196.251/demonstration/internet-assets-count')
@@ -886,7 +988,7 @@ export default {
         });
     },
     // 安全动态
-    threat_dynamics() {
+    threat_dynamics () {
       this.$axios
         .get("/demonstration/threat-dynamics")
         // this.$axios.get('https://47.105.196.251/demonstration/threat-dynamics')
@@ -908,7 +1010,7 @@ export default {
           console.log(error);
         });
     },
-    initSwiper() {
+    initSwiper () {
       this.$nextTick(() => {
         var _this = this;
         if (!_this.myswiper) {
@@ -929,7 +1031,7 @@ export default {
             slidesPerView: 4,
             slidesPerGroup: 1,
             on: {
-              slideChange: function() {}
+              slideChange: function () { }
             }
           });
           console.log(this);
@@ -956,7 +1058,7 @@ export default {
       });
     },
     // 实时情报动态
-    real_time_data() {
+    real_time_data () {
       this.setinter = setInterval(() => {
         this.conut_num++;
         var item = this.real_time_threat.shift();
@@ -964,7 +1066,7 @@ export default {
       }, 5000);
     },
     // 左上-威胁分布-饼图
-    pie_left_echarts() {
+    pie_left_echarts () {
       this.$axios;
       // .get(
       //   "https://47.105.196.251:8443/demonstration/threat-level-distribution"
@@ -1004,7 +1106,7 @@ export default {
             },
             tooltip: {
               show: false,
-              position: function(pos, params, dom, rect, size) {
+              position: function (pos, params, dom, rect, size) {
                 // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
                 var obj = { top: 60 };
                 obj[["left", "right"][+(pos[0] < size.viewSize[0] / 2)]] = 5;
@@ -1057,7 +1159,7 @@ export default {
           console.log(error);
         });
     },
-    pie_right_echarts() {
+    pie_right_echarts () {
       this.$axios
         .get("/demonstration/threat-category")
         //   this.$axios
@@ -1089,7 +1191,7 @@ export default {
             },
             tooltip: {
               show: false,
-              position: function(pos, params, dom, rect, size) {
+              position: function (pos, params, dom, rect, size) {
                 // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
                 var obj = { top: 60 };
                 obj[["right", "left"][+(pos[0] < size.viewSize[0] / 2)]] = 5;
@@ -1143,7 +1245,7 @@ export default {
         });
     },
     // 左中
-    alarm_type_f_echarts() {
+    alarm_type_f_echarts () {
       var mychart = echarts.init(document.getElementById("alarm_type_f"));
       var option = {
         grid: {
@@ -1243,7 +1345,7 @@ export default {
       };
       mychart.setOption(option, true);
     },
-    alarm_type_s_echarts() {
+    alarm_type_s_echarts () {
       var mychart = echarts.init(document.getElementById("alarm_type_s"));
       var option = {
         grid: {
@@ -1343,7 +1445,7 @@ export default {
       };
       mychart.setOption(option, true);
     },
-    alarm_type_t_echarts() {
+    alarm_type_t_echarts () {
       var mychart = echarts.init(document.getElementById("alarm_type_t"));
       var option = {
         grid: {
@@ -1444,7 +1546,7 @@ export default {
     },
     // 左下
     // 折线图
-    risk_trend_echarts() {
+    risk_trend_echarts () {
       this.$axios
         .get("/demonstration/threat-situation")
         // this.$axios.get('https://47.105.196.251/demonstration/threat-situation')
@@ -1589,9 +1691,9 @@ export default {
         });
     },
     // 中国地图
-    china_eachrts(item) {
+    china_eachrts (item) {
       if (item) {
-        function formatDate(value) {
+        function formatDate (value) {
           let date = new Date(value);
           let y = date.getFullYear();
           let MM = date.getMonth() + 1;
@@ -1629,13 +1731,13 @@ export default {
       myChart.showLoading();
       var mapFeatures = echarts.getMap(mapName).geoJson.features;
       myChart.hideLoading();
-      mapFeatures.forEach(function(v) {
+      mapFeatures.forEach(function (v) {
         // 地区名称
         var name = v.properties.name;
         // 地区经纬度
         geoCoordMap[name] = v.properties.cp;
       });
-      var convertData = function(data) {
+      var convertData = function (data) {
         var res = [];
         for (var i = 0; i < data.length; i++) {
           var geoCoord = geoCoordMap[data[i].name];
@@ -1651,14 +1753,14 @@ export default {
       var option = {
         tooltip: {
           trigger: "item",
-          position: function(pos, params, dom, rect, size) {
+          position: function (pos, params, dom, rect, size) {
             // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
             // var obj = { top: 60 };
             // obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
             return [450, 170];
             // return obj;
           },
-          formatter: function(params) {
+          formatter: function (params) {
             var toolTiphtml = "";
             for (var i = 0; i < toolTipData.length; i++) {
               if (params.name == toolTipData[i].name) {
@@ -1793,7 +1895,7 @@ export default {
       };
       myChart.setOption(option);
       var dataindex = 0;
-      setInterval(function() {
+      setInterval(function () {
         myChart.dispatchAction({
           type: "showTip",
           seriesIndex: 0, // 显示第几个series
@@ -1802,7 +1904,7 @@ export default {
       }, 1000);
     },
     // 中下
-    info_relation_echarts(item) {
+    info_relation_echarts (item) {
       var datalist = [
         {
           name: item.last_alerts.matched,
@@ -1903,7 +2005,7 @@ export default {
     // 右上
     // 右中
     // 威胁分布
-    threat_echarts() {
+    threat_echarts () {
       var timelist = [],
         high_list = [],
         medium_list = [],
@@ -1931,7 +2033,7 @@ export default {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
-          formatter: function(item, index) {
+          formatter: function (item, index) {
             // if (item.seriesName ) {
             var html =
               item[0].seriesName +
@@ -2068,22 +2170,22 @@ export default {
       mychart.setOption(option, true);
     },
     // 右下
-    getFullCreeen() {
+    getFullCreeen () {
       this.full_if = false;
       this.inFullCreeen(document.documentElement);
     },
-    outfull() {
+    outfull () {
       this.fun_text = "全屏";
       this.full_if = true;
     },
-    checkFull() {
+    checkFull () {
       var isFull = document.webkitIsFullScreen;
       if (isFull === undefined) {
         isFull = false;
       }
       return isFull;
     },
-    inFullCreeen(element) {
+    inFullCreeen (element) {
       let el = element;
       let rfs =
         el.requestFullScreen ||
@@ -2099,7 +2201,7 @@ export default {
         }
       }
     },
-    outFullCreeen(element) {
+    outFullCreeen (element) {
       let el = element;
       let cfs =
         el.cancelFullScreen ||
@@ -2116,7 +2218,7 @@ export default {
       }
     },
     // 首要预警
-    main_warning() {
+    main_warning () {
       // this.$axios.get('https://47.105.196.251/demonstration/main-warning')
       this.$axios
         .get("/demonstration/main-warning")
@@ -2150,7 +2252,7 @@ export default {
         });
     },
     // 检测最新告警
-    check_alert() {
+    check_alert () {
       // this.$axios.get('https://47.105.196.251:8443/demonstration/check-alert')
       this.$axios
         .get("/demonstration/check-alert")
@@ -2196,7 +2298,7 @@ export default {
         });
     },
     // 威胁排行
-    threat_rank() {
+    threat_rank () {
       // this.$axios.get('https://47.105.196.251/demonstration/threat-rank')
       this.$axios
         .get("/demonstration/threat-rank")
@@ -2222,7 +2324,7 @@ export default {
         });
     },
     // 威胁分布
-    threat_distribution() {
+    threat_distribution () {
       // this.$axios.get('https://47.105.196.251/demonstration/threat-distribution')
       this.$axios
         .get("/demonstration/threat-distribution")
@@ -2237,7 +2339,7 @@ export default {
           console.log(error);
         });
     },
-    rowClass: function(row, index) {
+    rowClass: function (row, index) {
       if (row.rowIndex % 2 == 0) {
       } else {
         return " background-color: rgba(34, 72, 137, 0.56)";

@@ -1,29 +1,39 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from "vue";
-import App from "./App";
-import router from "./router";
-import axios from "axios";
-import echarts from "echarts";
-// import china from "static/china.js";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-import "./assets/icon/iconfont.css";
-import "common/js/iconfont.js";
-import "common/family/font.css";
-import "common/family/pingfang.css";
-import "swiper/dist/css/swiper.min.css";
-Vue.config.productionTip = false;
-// axios.defaults.baseURL = "/api";
-// axios.defaults.headers.post["Content-Type"] = "application/json";
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+
+import store from './store/index'
+
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
-Vue.prototype.$echarts = echarts; //引入组件
+
+import './assets/css/index.css'
+
+// 引入axios
+import axios from 'axios'
 Vue.prototype.$axios = axios;
-// Vue.prototype.$china = china
+axios.defaults.baseURL = '/api/';
+
+// 引入echarts
+import echarts from 'echarts';
+Vue.prototype.$echarts = echarts;
+
+import "echarts/extension/bmap/bmap.js";
+import '../node_modules/echarts/map/js/world.js'
+
+//过滤器
+import '@/filters/index'
+
+Vue.config.productionTip = false;
+
 /* eslint-disable no-new */
 new Vue({
-  el: "#app",
+  el: '#app',
   router,
+  store,
   components: { App },
-  template: "<App/>"
-});
+  template: '<App/>'
+})

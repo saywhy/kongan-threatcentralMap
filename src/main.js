@@ -27,6 +27,8 @@ import '../node_modules/echarts/map/js/world.js'
 //过滤器
 import '@/filters/index'
 
+import '@/assets/js/common.js'
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

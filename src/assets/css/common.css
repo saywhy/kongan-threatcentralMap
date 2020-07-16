@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "LcdD";
-  src: url("../family/LcdD.ttf");
+/*  font-family: "LcdD";
+  src: url("../family/LcdD.ttf");*/
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@ body,
   width: 100%;
   height: 100%;
   /* font-weight: 900; */
-  font-family: PingFang;
+/*  font-family: PingFang;*/
   color: #333;
 }
 
@@ -155,14 +155,14 @@ input:-ms-input-placeholder {
 
 
 @font-face {
-  font-family: "PingFangMedium";
-  src: url("../family/PingFang-Medium.ttf");
+ /* font-family: "PingFangMedium";
+  src: url("../family/PingFang-Medium.ttf");*/
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "PingFang";
+  /*font-family: "PingFang";*/
 }
 
 .el-date-editor .el-range-separator {
@@ -202,6 +202,7 @@ input:-ms-input-placeholder {
   border-radius: 2px;
 }
 
+/*
 .el-textarea__inner {
   font-family: PingFang !important;
 }
@@ -209,6 +210,7 @@ input:-ms-input-placeholder {
 textarea {
   font-family: PingFang !important;
 }
+*/
 
 .dropdown_ul_box {
   width: 148px !important;

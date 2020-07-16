@@ -5,6 +5,10 @@ export default {
     baseInfo:{
       ScreenName:'鉴源威胁情报系统'
     },
+    //下拉框类型
+    classition:'all',
+    //高亮数据
+    highlight: [],
     //两侧数据
     asideLists:[{name:'威胁分布',alias:'threatDistribution', flag: true, aside_id: 0},
       {name:'威胁来源排名',alias:'threatIndicators', flag: true, aside_id: 1},
@@ -13,18 +17,19 @@ export default {
       {name:'威胁态势',alias:'branchSafe', flag: false, aside_id: 4},
       {name:'高风险指标',alias:'systemStatus', flag: false, aside_id: 5}],
     //顶部数据
-    topLists: [{name:'情报总数',alias:'risk_asset_count', flag: true, top_id: 0,num:[0,0,0,0,0,0]},
-      {name: '石油石化',alias:'outreachthreat_assets_count', flag: true, top_id: 1,num:[0,0,0,0,0,0]},
-      {name: '告警数',alias:'alert_count', flag: false, top_id: 2,num:[0,0,0,0,0,0]},
-      {name: '未处理告警数',alias:'untreated_alert_count', flag: false, top_id: 3,num:[0,0,0,0,0,0]},
-      {name: '风险服务器数',alias:'servers', flag: false, top_id: 4,num:[0,0,0,0,0,0]},
-      {name: '风险终端数',alias:'workstation', flag: false, top_id: 5,num:[0,0,0,0,0,0]},
-      {name: '风险网络设备数',alias:'network_equipment', flag: false, top_id: 6,num:[0,0,0,0,0,0]}]
+    topLists: [{name:'情报总数',alias:'allOccupe',flag: true,top_id: 0,num:[0,0,0,0,0,0,0]},
+      {name: '石油石化',alias:'petrochemical', flag: false, top_id: 1,num:[0,0,0,0,0,0,0]},
+      {name: '电力行业',alias:'electric', flag: false, top_id: 2,num:[0,0,0,0,0,0,0]},
+      {name: '轨交行业',alias:'railTransit', flag: false, top_id: 3,num:[0,0,0,0,0,0,0]},
+      {name: '水务行业',alias:'waterIndustry', flag: false, top_id: 4,num:[0,0,0,0,0,0,0]},
+      {name: '制造业',alias:'manufacturing', flag: false, top_id: 5,num:[0,0,0,0,0,0,0]}]
   },
   getters: {
     baseInfo: state => state.baseInfo,
     asideLists: state => state.asideLists,
     topLists: state => state.topLists,
+    classition: state => state.classition,
+    highlight: state => state.highlight
   },
   mutations: {
     /**
@@ -74,19 +79,48 @@ export default {
     },
     SET_TOP_LISTS_NUM: (state,args) => {
       state.topLists.map(item => {
-        for (let key in args) {
-          if(item.alias == key){
-            if(Number(args[key]) > 99999){
-              args[key] = 999999;
-            }
-            if(args[key] == undefined || args[key] == null){
-              args[key] == 0;
-            }
-            let count = String(args[key]).padStart(6,'0');
-            item.num = count.toString().split('');
-          }
+        if(item.top_id == args.id){
+          let num = Number(args.count);
+          if(num > 9999999){num = 9999999;}
+          if(num == undefined || num == null){num == 0;}
+          let count = String(num).padStart(7,'0');
+          item.num = count.toString().split('');
         }
       });
+    },
+    /**
+     *下拉框参数修改
+     * */
+    SET_SELECT_BY_ID: (state,args) => {
+      //console.log(args);
+      let cla = state.classition;
+      if(args == 0) cla = 'all';
+      else if(args == 1) cla = 'oil';
+      else if(args == 2) cla = 'power';
+      else if(args == 3) cla = 'rail';
+      else if(args == 4) cla = 'water';
+      else if(args == 5) cla = 'industry';
+      state.classition = cla;
+
+      let topLists = state.topLists;
+      let firstItem = topLists.shift();
+
+      topLists.forEach((item,index) => {
+        if(item.top_id == args){
+          item.flag = true;
+        }else {
+          item.flag = false;
+        }
+      });
+      topLists.unshift(firstItem);
+      state.topLists = topLists;
+    },
+    /**
+     *设置高亮数据
+     * */
+    SET_HIGHLIGHT_LIST: (state, args) => {
+      //console.log(args);
+      state.highlight = args;
     }
   },
   actions: {
@@ -95,10 +129,6 @@ export default {
 
       let resp = await axios('/yiiapi/demonstration/get-base-config',{params:context});
       let {status, data} = resp.data;
-
-      console.log('***********')
-      console.log(data);
-
       if(status == 0){
         commit('SET_BASE_INFO',data);
         return true;
@@ -131,9 +161,7 @@ export default {
       let resp = await axios('/yiiapi/demonstration/get-top-config',{params:context});
       let {status, data} = resp.data;
       data.forEach(item => {
-        if(!item.num){
-          item.num = [0,0,0,0,0,0];
-        }
+        if(!item.num) item.num = [0,0,0,0,0,0,0];
       })
       if(status == 0){
         commit('SET_TOP_LISTS',data);

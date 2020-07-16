@@ -8,7 +8,6 @@
 
 <script type="text/ecmascript-6">
   import VmScreenMap from '../vm-screen-sup/vm-screen-map';
-  import VmScreenSpread from '../vm-screen-sup/vm-screen-spread'
   export default {
     name: "vm-screen-middle1",
     data(){
@@ -18,8 +17,7 @@
       }
     },
     components:{
-      VmScreenMap,
-      VmScreenSpread
+      VmScreenMap
     },
     methods:{
 

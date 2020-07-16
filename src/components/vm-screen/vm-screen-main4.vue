@@ -41,6 +41,12 @@
               this.trendData.xAxisData = Object.keys(data);
               this.trendData.yAxisData = Object.values(data);
 
+              let lastVal = this.trendData.yAxisData.pop();
+
+              this.$store.commit('SET_TOP_LISTS_NUM',{id:0,count:Number(lastVal)});
+
+              this.trendData.yAxisData.push(lastVal);
+
               this.$nextTick(() => {
                 this.drawGraph();
               })

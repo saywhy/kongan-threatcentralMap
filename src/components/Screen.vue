@@ -2,7 +2,14 @@
   <div class="home-screen" v-cloak>
     <div class="home-top">
       <div class="home_l">
-        <!--<label class="e_label"></label>-->
+        <div class="home_block">
+          <el-select class="e_select" @change="selectChanged" v-model="selectVal" clearable :popper-append-to-body="false" placeholder="请选择">
+            <el-option v-for="item in selectList" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+          <i class="e_select_img"></i>
+        </div>
+
       </div>
       <div class="home_c">{{threatEyeName}}</div>
       <div class="home_r">
@@ -11,7 +18,7 @@
         <el-button type="primary" class="e_btn" @click="fullScreen();">
           <span v-if="!isFullscreen"><i class="full"></i><span class="name">全屏</span></span>
           <span v-if="isFullscreen"><i class="refull"></i><span class="name">退出全屏</span></span>
-          </el-button>
+        </el-button>
       </div>
     </div>
     <div class="home-content">
@@ -28,7 +35,7 @@
       </div>
       <div class="screen-2">
         <div class="list-item list-item-top">
-          <vm-screen-middle0 :topData="topLists" v-if="topLists.length>0">
+          <vm-screen-middle0 :topData="topLists">
           </vm-screen-middle0>
         </div>
         <div class="list-item list-item-middle">
@@ -77,14 +84,19 @@
     data() {
       return {
         isFullscreen: false,
-        threatEyeName: '鉴源威胁情报系统'
+        threatEyeName: '鉴源威胁情报系统',
+        selectFlag:false,
+        selectVal:0,
+        selectList:[{label:'全行业威胁感知',value:0,key:'all'},{label:'石油石化',value:1,key:'oil'},
+          {label:'电力行业',value:2,key:'power'},{label:'轨交行业',value:3,key:'rail'},
+          {label:'水务行业',value:4,key:'water'},{label:'制造业',value:5,key:'industry'}]
       }
     },
     computed:{
       ...mapGetters({
         baseInfo:'baseInfo',
         lists:'asideLists',
-        topLists:'topLists',
+        topLists:'topLists'
       }),
     },
     created() {
@@ -131,6 +143,11 @@
         return isFull
       },
       /**********************************************/
+      selectChanged(val){
+
+        this.$store.commit('SET_SELECT_BY_ID',val);
+
+      }
     }
   }
 </script>
@@ -155,16 +172,79 @@
       height: 100px;
       display: flex;
       .home_l {
-        flex: 1;
-        .e_label {
-          width: 128px;
-          height: 128px;
-          margin-top: -30px;
-          margin-left: 50px;
-          display: block;
-          background-image: url("../assets/images/screen/head-logo1.png");
-          background-repeat: no-repeat;
-          background-size: 128px 128px;
+        .home_block{
+          z-index: 999;
+          position: relative;
+          /deep/
+          .e_select{
+            .el-input{
+              width: 162px;
+              height: 42px;
+              .el-input__inner{
+                border-width: 0;
+                line-height: inherit;
+                background-color: transparent;
+                font-family: PingFangSC-Regular;
+                cursor: pointer;
+                color: #fff;
+                border-radius: 5px;
+                margin-top: 24px;
+                font-size: 14px;
+                background-image: radial-gradient(49% 87%, rgba(10,113,255,0.42) 5%,
+                rgba(10,113,255,0.12) 88%, rgba(10,113,255,0.12) 88%);
+                &::-webkit-input-placeholder { /* WebKit browsers */
+                  font-size: 14px;
+                }
+                &::-moz-placeholder { /* Mozilla Firefox 19+ */
+                  font-size: 14px;
+                }
+                &:-ms-input-placeholder { /* Internet Explorer 10+ */
+                  font-size: 14px;
+                }
+              }
+              .el-input__suffix{
+                display: none!important;
+              }
+            }
+            .el-select-dropdown{
+              margin-top: 24px!important;
+              border-width: 0!important;
+              left: 0!important;
+              background: #082754!important;
+              border-radius: 0 0 5px 5px!important;
+              .el-select-dropdown__list{
+                padding: 1px 0!important;
+                .el-select-dropdown__item{
+                  height: 38px;
+                  background: #082754;
+                  line-height: 38px;
+                  font-size: 14px;
+                  color: #fff;
+                  font-family: PingFangSC-Regular;
+                  /*border: 1px solid #082754;*/
+                  text-align: left;
+                  padding: 0 10px;
+                  &:hover{
+                    background: #3882FF;
+                    /*border: 1px solid #3882FF;*/
+                  }
+                }
+              }
+              .popper__arrow{
+                display: none!important;
+              }
+            }
+          }
+          .e_select_img{
+            position: absolute;
+            right: 16px;
+            top: 38px;
+            width: 12px;
+            height: 12px;
+            background-image: url("../assets/images/screen/head-down.png");
+            background-repeat: no-repeat;
+            background-size: 12px 12px;
+          }
         }
       }
       .home_c {
@@ -176,6 +256,7 @@
         background-image: url("../assets/images/screen/head-center.png");
         background-repeat: no-repeat;
         background-position: 0 40px;
+        background-size: 1520px 46px;
       }
       .home_r {
         flex: 1;

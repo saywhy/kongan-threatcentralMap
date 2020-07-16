@@ -1,22 +1,47 @@
 <template>
     <div class="vm-screen-middle2">
       <div class="block-all">
-        <div class="flow">
-          <button class="item">IP:123.45.67.89</button>
-          <button class="item">MAL:A07DA897FDE02</button>
-          <button class="item">URL:www.baddoddmm.com</button>
-          <button class="item">URL:www.baddomm.com</button>
-          <button class="item">IP:123.45.67.89</button>
-          <button class="item">MAL:A07DA897FDE02</button>
-          <button class="item">IP:123.45.67.89</button>
-          <button class="item">MAL:A07DA897FDE02</button>
-          <button class="item">URL:www.baddoddmm.com</button>
-          <button class="item">URL:www.baddomm.com</button>
-          <button class="item">IP:123.45.67.89</button>
-          <button class="item">MAL:A07DA897FDE02</button>
-          <button class="item">IP:123.45.67.89</button>
-          <button class="item">MAL:A07DA897FDE02</button>
-          <button class="item">URL:www.baddoddmm.com</button>
+        <div class="flow" id="box">
+          <!--<div id="scroll-message" class="scroll-message-style">
+             <ul>
+              <li class="scroll-item">
+               <button class="item">MAL:A07DA897FDE02</button>
+               <button class="item">URL:www.baddoddmm.com</button>
+               <button class="item">URL:www.baddomm.com</button>
+               <button class="item">IP:123.45.67.89</button>
+              </li>
+              <li class="scroll-item">
+               <button class="item">MAL:A07DA897FDE02</button>
+               <button class="item">IP:123.45.67.89</button>
+               <button class="item">MAL:A07DA897FDE02</button>
+               <button class="item">URL:www.baddoddmm.com</button>
+              </li>
+              <li class="scroll-item">
+              <button class="item">MAL:A07DA897FDE02</button>
+              <button class="item">URL:www.baddoddmm.com</button>
+              <button class="item">URL:www.baddomm.com</button>
+              <button class="item">IP:123.45.67.89</button>
+              </li>
+              <li class="scroll-item">
+              <button class="item">MAL:A07DA897FDE02</button>
+              <button class="item">IP:123.45.67.89</button>
+              <button class="item">MAL:A07DA897FDE02</button>
+              <button class="item">URL:www.baddoddmm.com</button>
+              </li>
+              <li class="scroll-item">
+                <button class="item">MAL:A07DA897FDE02</button>
+                <button class="item">URL:www.baddoddmm.com</button>
+                <button class="item">URL:www.baddomm.com</button>
+                <button class="item">IP:123.45.67.89</button>
+              </li>
+             </ul>
+          </div>-->
+          <ul class="box-list" :class="{anim:animate == true}">
+            <li v-for="(item,index) in itemsList" :key="index" class="li-item">
+              <button class="item" v-for="(it,idx) in item"
+                      :key="idx" :class="{'active':it.type == 'alert'}">{{it.name}}</button>
+            </li>
+          </ul>
         </div>
         <div class="arrow"></div>
         <div class="real">
@@ -31,136 +56,111 @@
       name: "vm-screen-middle2",
       data(){
           return{
-            flow: {
-              legendData:[],
-              xAxisData:[],
-              yAxisData:[],
-              series:[],
-              legendColor:[]
-            },
-            realData:[],
-            timers:null
+            timers:null,
+            scrollers:null,
+            timeout:null,
+
+            animate:false,
+            itemsList:[],
+            items:[
+              {name:"MAL:A07DA897FDE02",type:'common'},
+              {name:"MAL:A07DA897FDE02",type:'alert'},
+              {name:"MAL:A07DA897FDE02",type:'common'}
+            ]
           }
       },
       created() {
         this.getData();
-        this.getReal();
       },
       mounted() {
-        /*this.timers = setInterval(()=>{
+        this.timers = setInterval(()=>{
           this.getData();
-          this.getReal();
-        },10000 * 30);*/
+        },6000 * 4);
       },
       destroyed(){
         clearInterval(this.timers);
+        clearInterval(this.scrollers);
       },
       methods:{
         //获取数据
         getData() {
-          this.$axios
-            .get('/yiiapi/demonstration/flow-statistics')
+          this.$axios.get('/random_key')
             .then((resp) => {
 
-              let {status, data} = resp.data;
+              let {code, data} = resp.data;
+              this.itemsList = [];
 
-              if(status == 0){
+              // console.log(data)
+              //清零
+              //console.log(this.scrollers)
+              clearInterval(this.scrollers);
 
+              if(code == 200){
 
+                this.itemsList = this.sliceArray(data,3);
 
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        },
-        getReal() {
-          this.$axios
-            .get('/yiiapi/demonstration/realtime-alert')
-            .then((resp) => {
+                let attr = this.itemsList.slice(0,5);
 
-              let {status, data} = resp.data;
-              //console.log(data)
-              if(status == 0){
-                //console.log(data)
-                this.realData = data;
+               this.scrollers = setInterval(this.scroll,5000);
+
                 this.$nextTick(() => {
-                  this.drawGraph();
+                  this.drawGraph(attr);
                 });
+
               }
             })
             .catch((error) => {
               console.log(error);
             });
         },
-        drawGraph() {
+        drawGraph(attr) {
+
+          let attrs = [];
+
+          attr.forEach((item) => {
+            item.forEach((it) => {
+              if(it.type == 'alert'){
+                attrs.push(it);
+              }
+            });
+          });
+
+         // console.log(attrs);
+
+          this.$store.commit('SET_HIGHLIGHT_LIST',attrs);
+
           let datalist = [];
           let linklist = [];
 
-          let relelist = [];
+          if(attrs.length > 0){
 
-          let realData = this.realData;
-
-          //console.log(realData)
-
-          if(realData.length > 0){
-            realData.forEach(item => {
-              var obj = {}, linkobj = {};
-              obj.name = item.src_ip;
-
+            attrs.forEach(item => {
+              var obj = {};  let linkobj = {};
+              obj.name = item.name;
               obj.symbolSize = 10;
-              datalist.push(item.src_ip,item.dest_ip);
-              linkobj.source = item.src_ip;
-              linkobj.target = item.dest_ip;
-              linkobj.value = item.category;
-              linkobj.lineStyle = {color:'#00D7E9',width: 2, curveness: 0.4};
 
-              linklist.push(linkobj);
+              datalist.push(obj);
+              linkobj.source = item.name;
 
-              relelist.push(item.category);
+              let des = item.des;
+              for(let key in des){
+                var link={
+                  source:linkobj.source,
+                  label:{show:false}
+                }
+                datalist.push({name:des[key],symbolSize: 10});
+                link.target = des[key];
+                linklist.push(link);
+              }
             });
           }
+
           //去重
-          datalist = datalist.filter((x, index,self)=>self.indexOf(x)===index);
-          relelist = relelist.filter((x, index,self)=>self.indexOf(x)===index);
-
-          let newAttr = [];
-          datalist.forEach((item,index) => {
-            let col = '';
-            if(index == 0){
-              col = '#D44361';
-            }else if(index == 1){
-              col = '#D0A13F';
-            }else if(index == 2){
-              col = '#60C160';
-            }else if(index == 3){
-              col = '#FF00C9';
-            }
-            newAttr.push({name:item,label:{color:'#fff'},itemStyle:{color:col}});
-          });
-
-          //实时威胁检测
-          let releAttr = [];
-
-          //console.log(relelist)
-          relelist.forEach((item,index) => {
-            let col = '';
-            if(index == 0){
-              col = '#D44361';
-            }else if(index == 1){
-              col = '#D0A13F';
-            }else if(index == 2){
-              col = '#60C160';
-            }else if(index == 3){
-              col = '#FF00C9';
-            }
-            releAttr.push({
-              name:item,
-              itemStyle:{color:col}
-            });
-          });
-
-          datalist = newAttr;
+          var hash = {};
+          datalist = datalist.reduce(function(datalist, current) {
+            hash[current.name] ? '' : hash[current.name] = true && datalist.push(current);
+            return datalist
+          }, []);
 
           var mychart = this.$echarts.init(document.getElementById("info_relation"));
 
@@ -227,7 +227,28 @@
             ]
           };
           mychart.setOption(option, true);
+        },
+        sliceArray(array, size) {
+          var result = [];
+          for (var x = 0; x < Math.ceil(array.length / size); x++) {
+            var start = x * size;
+            var end = start + size;
+            result.push(array.slice(start, end));
+          }
+          return result;
+        },
+        scroll(){
+          this.animate=true;
+          clearTimeout(this.timeout);
+          this.timeout = setTimeout(()=>{
+            this.itemsList.push(this.itemsList[0]);
+            this.itemsList.shift();
 
+            let attr = this.itemsList.slice(0,5);
+            this.drawGraph(attr);
+
+            this.animate = false;
+          },500)
         }
       }
     }
@@ -239,23 +260,42 @@
   .block-all{
     display: flex;
     .flow{
-      height: 245px;
+      height: 230px;
       width: 480px;
       text-align: left;
-      padding: 14px 0;
-      .item{
-        padding: 8px 5px;
-        border-radius: 4px;
-        color: #fff;
-        background: #26314d;
-        outline: none;
-        border: 1px solid #26314d;
-        margin: 6px 8px 6px 0;
-        cursor: pointer;
-        &:hover{
-          color: #C3112B;
-          background: rgba(195,17,43,0.24);
-          border: 1px solid #C3112B;
+      margin: 14px 0;
+      overflow: hidden;
+      .box-list{
+        &.anim{
+          transition: all 0.5s;
+          margin-top: -46px;
+        }
+        .li-item{
+          height: 46px;
+          line-height: 46px;
+          text-align: left;
+          font-size: 0;
+          position: relative;
+          .item{
+            padding: 8px 5px;
+            border-radius: 4px;
+            color: #fff;
+            width: 150px;
+            background: #26314d;
+            outline: none;
+            border: 1px solid #26314d;
+            margin: 6px 8px 6px 0;
+            cursor: default;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+            &.active{
+              color: #C3112B;
+              background: rgba(195,17,43,0.24);
+              border: 1px solid #C3112B;
+            }
+          }
         }
       }
     };

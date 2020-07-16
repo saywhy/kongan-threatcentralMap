@@ -96,7 +96,7 @@
         attent1.showLoading({ text: '正在加载数据...' });
         attent1.clear();
         let option1 = {
-          backgroundColor:'rgba(66,146,255,0.1)',
+          backgroundColor:'rgba(8,21,53,1)',
           legend: {
             show:false
           },
@@ -108,21 +108,46 @@
             containLabel: false
           },
           xAxis: {
-            show: false,
+            show: true,
             type: 'category',
-            boundaryGap: false
+            boundaryGap: false,
+            splitLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine: {
+              show:true,
+              onZero:true,
+              lineStyle:{
+                color:'red'
+              }
+            },
+            data: ['1', '2', '3', '4', '5', '6', '7','8','9','10']
           },
           yAxis: {
-            show:false,
-            min:0,
-            max:5
+            show:true,
+            min: 0,
+            max: 10,
+            splitLine:{
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
           },
           series: [{
-            data: [1,2,3,1,2,4,1],
+            data: [4,2,3,1,5,4,1,6,2,7],
             type: 'line',
             smooth: true,
             itemStyle:{
-              opacity :0
+              opacity:0
             },
             lineStyle:{
               color:'#007AFF',
@@ -161,11 +186,10 @@
         attent2.showLoading({ text: '正在加载数据...' });
         attent2.clear();
         let option2 = {
-          backgroundColor:'rgba(255,107,74,0.1)',
+          backgroundColor:'rgba(8,21,53,1)',
           legend: {
             show:false
           },
-
           grid: {
             top:'0',
             left: '0',
@@ -174,15 +198,42 @@
             containLabel: false
           },
           xAxis: {
-            show: false,
+            show: true,
             type: 'category',
-            boundaryGap: false
+            boundaryGap: false,
+            splitLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine: {
+              show:true,
+              onZero:true,
+              lineStyle:{
+                color:'red'
+              }
+            },
+            data: ['1', '2', '3', '4', '5', '6', '7','8','9','10']
           },
           yAxis: {
-            show:false
+            show:true,
+            min: 0,
+            max: 10,
+            splitLine:{
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
           },
           series: [{
-            data: [1,3,4,5,1,1,4],
+            data: [5,3,8,5,4,1,6,4,6,2],
             type: 'line',
             smooth: true,
             itemStyle:{
@@ -219,7 +270,7 @@
         attent3.showLoading({ text: '正在加载数据...' });
         attent3.clear();
         let option3 = {
-          backgroundColor:'rgba(255,167,43,0.1)',
+          backgroundColor:'rgba(8,21,53,1)',
           legend: {
             show:false
           },
@@ -231,17 +282,42 @@
             containLabel: false
           },
           xAxis: {
-            show: false,
+            show: true,
             type: 'category',
-            boundaryGap: false
+            boundaryGap: false,
+            splitLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine: {
+              show:true,
+              onZero:true,
+              lineStyle:{
+                color:'red'
+              }
+            },
+            data: ['1', '2', '3', '4', '5', '6', '7','8','9','10']
           },
           yAxis: {
-            show:false,
-            min:0,
-            max:10
+            show:true,
+            min: 0,
+            max: 10,
+            splitLine:{
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
           },
           series: [{
-            data: [2,2,4,2,6,1,4],
+            data: [4,6,4,1,6,5,4,1,5,2],
             type: 'line',
             smooth: true,
             itemStyle: {
@@ -279,7 +355,7 @@
         attent4.showLoading({ text: '正在加载数据...' });
         attent4.clear();
         let option4 = {
-          backgroundColor:'rgba(66,146,255,0.1)',
+          backgroundColor:'rgba(8,21,53,1)',
           legend: {
             show:false
           },
@@ -291,17 +367,42 @@
             containLabel: false
           },
           xAxis: {
-            show: false,
+            show: true,
             type: 'category',
-            boundaryGap: false
+            boundaryGap: false,
+            splitLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine: {
+              show:true,
+              onZero:true,
+              lineStyle:{
+                color:'red'
+              }
+            },
+            data: ['1', '2', '3', '4', '5', '6', '7','8','9','10']
           },
           yAxis: {
-            show:false,
-            min:0,
-            max:8
+            show:true,
+            min: 0,
+            max: 10,
+            splitLine:{
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
           },
           series: [{
-            data: [1,2,3,1,2,4,5],
+            data: [1,2,3,1,2,4,5,1,5,2],
             type: 'line',
             smooth: true,
             itemStyle: {
@@ -341,7 +442,7 @@
         attent5.showLoading({ text: '正在加载数据...' });
         attent5.clear();
         let option5 = {
-          backgroundColor:'rgba(255,107,74,0.1)',
+          backgroundColor:'rgba(8,21,53,1)',
           legend: {
             show:false
           },
@@ -353,17 +454,42 @@
             containLabel: false
           },
           xAxis: {
-            show: false,
+            show: true,
             type: 'category',
-            boundaryGap: false
+            boundaryGap: false,
+            splitLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine: {
+              show:true,
+              onZero:true,
+              lineStyle:{
+                color:'red'
+              }
+            },
+            data: ['1', '2', '3', '4', '5', '6', '7','8','9','10']
           },
           yAxis: {
-            show:false,
-            min:0,
-            max:5
+            show:true,
+            min: 0,
+            max: 10,
+            splitLine:{
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
+            axisLine:{
+              show:true,
+              lineStyle:{
+                color:'rgba(44,53,80,.5)'
+              }
+            },
           },
           series: [{
-            data: [3,2,1,2,3,2,2],
+            data: [3,5,4,2,2,2,2,7,1,5],
             type: 'line',
             smooth: true,
             itemStyle: {

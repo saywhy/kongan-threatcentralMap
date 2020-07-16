@@ -12,7 +12,7 @@
             {{item.Name}}
           </marquee>
           <span class="country_name" v-else>{{item.Name}}</span>
-          <span class="country_count">{{item.count}}</span>
+          <span class="country_count">{{item.Val}}</span>
         </div>
         <el-progress :show-text="false" :text-inside="true"
                      :stroke-width="20" :percentage="item.count">
@@ -48,7 +48,7 @@
         this.$axios
           .get('/country').then((resp) => {
 
-           // console.log(resp)
+            //console.log(resp)
 
             let {code, data} = resp.data;
 
@@ -108,7 +108,7 @@
           }
         }
         .pgress-title{
-          width: 90px;
+          width: 110px;
           text-align: left;
           cursor: default;
           font-family: PingFang;

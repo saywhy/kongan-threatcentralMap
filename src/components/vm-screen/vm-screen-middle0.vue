@@ -31,7 +31,7 @@
         }
       },
       created(){
-        this.getData();
+        //this.getData();
       },
       mounted() {
         /*this.timers = setInterval(()=>{
@@ -44,8 +44,7 @@
       methods:{
         //获取数据
         getData() {
-          this.$axios
-            .get('/yiiapi/demonstration/top-count')
+          this.$axios.get('/yiiapi/demonstration/top-count')
 
             .then((resp) => {
 
@@ -54,6 +53,7 @@
               this.topFlag = false;
 
               let {status, data} = resp.data;
+
               if (status == 0) {
                this.$store.commit('SET_TOP_LISTS_NUM', data);
               }
@@ -79,7 +79,7 @@
     .item-list{
       color: #fff;
       /*width: 192px;*/
-      text-align: left;
+      text-align: center;
       padding: 20px 0;
       position: relative;
       display: inline-block;

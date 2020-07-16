@@ -1,10 +1,10 @@
 <template>
   <div class="vm-screen-main5">
     <el-table :data="tableData" class="screen-table">
-      <el-table-column prop="category" label="IOC" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="indicator" label="类型" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="asset_ip" label="国家" show-overflow-tooltip></el-table-column>
-   <!--   <el-table-column label="攻击阶段" show-overflow-tooltip>
+      <el-table-column prop="IOC" label="IOC" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="category" label="类型" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="country" label="国家" show-overflow-tooltip></el-table-column>
+   <!--<el-table-column label="攻击阶段" show-overflow-tooltip>
         <template slot-scope="scope">
           {{ scope.row.attack_stage | stage }}
         </template>
@@ -14,6 +14,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {mapGetters} from 'vuex'
+
   export default {
     name: "vm-screen-main5",
     data() {
@@ -22,13 +24,25 @@
         tableData: []
       }
     },
+    computed:{
+      ...mapGetters(['classition']),
+    },
     created() {
       this.getData();
     },
     mounted() {
-      /*this.timers = setInterval(()=>{
+      this.timers = setInterval(()=>{
         this.getData();
-      },10000 * 30);*/
+      },10000);
+    },
+    watch:{
+      classition:function(val,newVal){
+        clearInterval(this.timers);
+        this.getData();
+        this.timers = setInterval(()=>{
+          this.getData();
+        },10000);
+      }
     },
     destroyed(){
       clearInterval(this.timers);
@@ -36,22 +50,27 @@
     methods: {
       //获取数据
       getData() {
-        this.$axios
-          .get('/yiiapi/demonstration/threat-range')
+
+        this.$axios.get('/high?switch='+this.classition)
 
           .then((resp) => {
 
-            let {status, data} = resp.data;
+            this.tableData = [];
 
-            if (status == 0) {
-              this.tableData = data;
+            let {code, data} = resp.data;
+
+            if (code == 200) {
+              //this.tableData = data;
+              for (var value of data) {
+                for (var val in value) {
+                  let vk = value[val];
+                  this.tableData.push({IOC:val,category:vk.category[0],country:vk.country});
+                }
+              }
             }
-
           })
           .catch((error) => {
-
             console.log(error);
-
           });
       },
     }

@@ -5,6 +5,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { mapGetters } from 'vuex'
   export default {
     name: "ddos",
     data() {
@@ -12,146 +13,275 @@
         timers: null,
         myEcharts:null,
         loading:true,
-        mapData:[{dest_ip:'202.106.40.115',dest_label:"[]",dest_location:[116.29845, 39.95933],
-          dest_type:'remote',id:173,src_ip:'192.168.1.195',src_label:"['11234分支']",
-          src_location:[116.29845, 39.95933],src_type:'local'}]
+        mapData:[{first_seen: "2013-07-03 11:17",
+          name: "updatelivez.redirectme.net",
+          type: "alert",
+          des:{IP:"194.62.182.53"},
+          category:{0: "僵尸网络C&C"},
+          Coordinates:{
+            Latitude: 52.3824,
+            Longitude: 4.8995
+          }
+        }]
       }
     },
-    created(){
-     // this.getData();
+    computed:{
+      ...mapGetters(['highlight']),
     },
+    /*created(){
+      console.log(this.highlight);
+    },*/
     mounted() {
-      this.getData();
-      /*this.timers = setInterval(() => {
-       this.getData();
-      }, 10000 * 3);*/
+      // this.drawGraph();
     },
-    destroyed(){
-      clearInterval(this.timers);
-      //this.$echarts.dispose(document.getElementById("screenMap"));
+    watch:{
+      highlight:function (newVal,oldVal) {
+        this.$nextTick(() => {
+          this.drawGraph();
+        })
+      }
     },
+
     methods: {
-      //获取数据
-      getData(){
-        //this.loading = false;
-        this.$axios
-          .get('/yiiapi/demonstration/external-distribution')
+      drawGraph() {
+       // console.log('5555555555555');
+        //console.log(this.highlight)
+        let series = [];
 
-          .then((resp) => {
+       // let attr = this.mapData;
 
-            //this.loading = true;
+        let attr = this.highlight;
 
-            let {status, data} = resp.data;
+        let mapAttr = [];
 
-            if(status == 0){
+        console.log(attr)
 
-              this.mapData = data;
+        attr.map((item) => {
+         let obj = {
+           type: "effectScatter",
+           mapType: "china",
+           name: item.name,
+           coordinateSystem: "geo",
+           zlevel: 2,
+           symbolSize: 8,
+           // symbol: "rect",
+           rippleEffect: {
+             period: 4, //动画时间，值越小速度越快
+             brushType: "stroke", //波纹绘制方式 stroke, fill
+             scale: 4, //波纹圆环最大限制，值越大波纹越大
+             color:'red'
+           },
+           itemStyle:{
+             color:'red'
+           },
+           data: [
+             {
+               name: item.name,
+               value: [item.Coordinates.Longitude,item.Coordinates.Latitude],
+               catergory: item.category[0],
+               first_seen: item.first_seen,
+               tooltip: {
+                 trigger: "item",
+                 backgroundColor: "#1540a1",
+                 borderColor: "#FFFFCC",
+                 showDelay: 0,
+                 hideDelay: 5000,//浮层隐藏的延迟
+                 // enterable: true,
+                 // showContent: true,
+                 // triggerOn: 'click',//提示框触发的条件,禁止鼠标手动
+                 transitionDuration: 0,//提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
+                 // alwaysShowContent: true,//设置为 true 可以保证一直显示提示框内容。
+                 extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+                 formatter: function (params, ticket, callback) {
+                   // console.log(params);
+                   //根据业务自己拓展要显示的内容
+                   var toolTiphtml = '<div style="z-index: 9999">' +
+                     '<p style="text-align: left;"> 指标:' +
+                     params.data.name +
+                     '</p > <p style="text-align:left;"> 威胁类型 :' +
+                     params.data.catergory +
+                     '</p > <p style="text-align: left;">首次发现时间:' +
+                     params.data.first_seen +
+                     '</div>';
+                   return toolTiphtml;
+                 }
+               },
+             },
+           ],
 
-              setTimeout(() => {
-                this.$nextTick(() => {
-                  this.drawGraph();
-                });
-              },2000);
+         }
+         series.push(obj);
+        });
 
+        /////////////////////////////////////
+       /* var arr = [
+          {
+            type: "effectScatter",
+            mapType: "china",
+            name: "192.168.1.1",
+            coordinateSystem: "geo",
+            zlevel: 2,
+            // symbol: "rect",
+            rippleEffect: {
+              period: 4, //动画时间，值越小速度越快
+              brushType: "stroke", //波纹绘制方式 stroke, fill
+              scale: 4 //波纹圆环最大限制，值越大波纹越大
+            },
+            data: [
+              {
+                name: "2020年",
+                value: [-121.910642, 41.38028],
+                catergory: '1213123',
+                ip: '网络告警',
+                type: "类型",
+                tooltip: {
+                  trigger: "item",
+                  backgroundColor: "#1540a1",
+                  borderColor: "#FFFFCC",
+                  showDelay: 0,
+                  hideDelay: 5000,//浮层隐藏的延迟
+                  enterable: true,
+                  showContent: true,
+                  triggerOn: 'click',//提示框触发的条件,禁止鼠标手动
+                  transitionDuration: 0,//提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
+                  alwaysShowContent: true,//设置为 true 可以保证一直显示提示框内容。
+                  extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+                  formatter: function (params, ticket, callback) {
+                    // console.log(params);
+                    //根据业务自己拓展要显示的内容
+                    var toolTiphtml =
+                      '<p style="text-align: left;"> 失陷资产:' +
+                      params.data.catergory +
+                      '</p > <p style="text-align:left;"> 威胁类型 :' +
+                      params.data.ip +
+                      '</p > <p style="text-align: left;">首次发现时间:' +
+                      params.data.type +
+                      '</p ><p style="text-align: left;">资产分组:' +
+                      params.data.name
+                    return toolTiphtml;
+                  }
+                },
+              },
+            ],
+            symbolSize: 8,
+          },
+          {
+            type: "effectScatter",
+            mapType: "china",
+            name: "192.168.1.1",
+            coordinateSystem: "geo",
+            zlevel: 2,
+            rippleEffect: {
+              period: 4, //动画时间，值越小速度越快
+              brushType: "stroke", //波纹绘制方式 stroke, fill
+              scale: 4 //波纹圆环最大限制，值越大波纹越大
+            },
+            data: [
+              {
+                name: "55555",
+                value: [144.999416, -37.781726],
+                catergory: '1213123',
+                ip: '网络告警',
+                type: "类型",
+                tooltip: {
+                  trigger: "item",
+                  backgroundColor: "#1540a1",
+                  borderColor: "#FFFFCC",
+                  showDelay: 0,
+                  hideDelay: 5000,//浮层隐藏的延迟
+                  enterable: true,
+                  triggerOn: 'mousemove|click',//提示框触发的条件,禁止鼠标手动
+                  transitionDuration: 0,//提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
+                  alwaysShowContent: true,//设置为 true 可以保证一直显示提示框内容。
+                  extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+                  formatter: function (params, ticket, callback) {
+
+                    // console.log(params);
+                    //根据业务自己拓展要显示的内容
+                    var res = "";
+                    var name = params.name;
+
+                    var toolTiphtml =
+                      '<p style="text-align: left;"> 失陷资产:' +
+                      params.data.catergory +
+                      '</p > <p style="text-align:left;"> 威胁类型 :' +
+                      params.data.ip +
+                      '</p > <p style="text-align: left;">首次发现时间:' +
+                      params.data.type +
+                      '</p ><p style="text-align: left;">资产分组:' +
+                      params.data.name
+                    return toolTiphtml;
+                  }
+                },
+              },
+            ],
+            symbolSize: 8,
+          },
+
+        ]*/
+        ///////////////////////////////////////
+
+        /*attr.map((item) => {
+          mapAttr.push({
+            name: item.name,
+            value: [item.Coordinates.Longitude,item.Coordinates.Latitude],
+            tooltip:{
+              trigger: "item",
+              backgroundColor: "#1540a1",
+              borderColor: "#FFFFCC",
+              showDelay: 0,
+              hideDelay: 5000,//浮层隐藏的延迟
+              enterable: true,
+              // triggerOn: 'mousemove|click',//提示框触发的条件,禁止鼠标手动
+              transitionDuration: 0,//提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
+              alwaysShowContent: true,//设置为 true 可以保证一直显示提示框内容。
+              extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+              formatter: function (params, ticket, callback) {
+                console.log(params);
+                //根据业务自己拓展要显示的内容
+                var res = "";
+                var name = params.name;
+                var value = params.value[params.seriesIndex + 1];
+                res = name
+                return res;
+              }
             }
           })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
-      drawGraph() {
-
-        let series = []; //在地图上显示的数据
-
-        let symbol1 = ['image://static/image/f0.png', 'image://static/image/f1.png'];
-
-        let symbol2 = ['image://static/image/f1.png', 'image://static/image/f0.png'];
-
-        var symbolSize1 = [12,12],symbolSize2 = [12,12];
-
-        let mapData = this.mapData;
-
-        mapData.forEach(item => {
-
-          if((!!item.src_location) && (!!item.dest_location)){
-            let symbol = [];
-            let symbolSize = [];
-
-            if(item.src_type == 'local'){
-              symbol = symbol1;
-              symbolSize = symbolSize1;
-            }else {
-              symbol = symbol2;
-              symbolSize = symbolSize2;
-            }
-
-            series.push({
-              type: "lines",
-              coordinateSystem: "geo",
-              zlevel: 1,
-              // 线数据集。  从哪个城市to哪个城市
-              data: [{
-                name: item.src_ip,
-                toname: item.dest_ip,
-                //coords: [item.src_location, [item.dest_location[1],item.dest_location[0]]]
-                coords: [item.src_location, item.dest_location]
-              }],
-              //线上面的动态特效
-              effect: {
-                show: true,
-                period: 5, //特效动画的时间，单位为 s。
-                trailLength: .21,
-                color: "#00D7E9", //射线颜色
-                symbol:'triangle',
-                symbolSize: 4
-              },
-           /*   symbol: symbol,
-              symbolSize: symbolSize,*/
-              lineStyle: {
-                normal: {
-                  color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                    offset: 0,
-                    color: '#58B3CC'
-                  }, {
-                    offset: 1,
-                    color: "#00D7E9",
-                  }], false),
-                  width: 1,
-                  opacity: 0.03,
-                  curveness: 0.1
-                }
-              },
-              label:{
-                show: false,
-                color:'#ccc',
-                position:'end',
-                fontSize: 10
-              },
-              animation:false,
-              animationThreshold: 0
-            });
-          }
         });
-
-
         series.push({
-          type: "effectScatter",
-          mapType: "china",
-          name: "北京",
-          coordinateSystem: "geo",
-          zlevel: 1,
-          data: [{name: "", value: [116.3972,39.9075]}],
-          symbol:'image://static/image/f2.png',
-          symbolSize: 8,
-          /*itemStyle:{
-            color: 'red'
+          name: '',
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          symbol: 'pin',
+          // symbolSize: [100,100],
+      /!*    label: {
+            normal: {
+              show: true,
+              textStyle: {
+                color: '#fff',
+                fontSize: 9,
+              },
+              formatter (value){
+                return value.name
+              }
+            }
+          },*!/
+          itemStyle: {
+            normal: {
+              color: '#D8BC37', //标志颜色
+            }
           },
+          data: mapAttr,
+          showEffectOn: 'render',
           rippleEffect: {
-            period: 1, //动画的周期，秒数。
-            scale: .5, //动画中波纹的最大缩放比例
-            brushType: "stroke" //波纹的绘制方式，可选 'stroke' 和 'fill'。
-          }*/
+            brushType: 'stroke'
+          },
+          hoverAnimation: true,
+          zlevel: 1
         });
+*/
+
+        this.$echarts.dispose(document.getElementById("screenMap"));
 
         this.myEcharts = this.$echarts.init(document.getElementById("screenMap"));
 
@@ -171,6 +301,16 @@
               color: "#fff"
             }
           },
+          tooltip: {
+            show: true,
+            showDelay: 0,
+            hideDelay: 5000,//浮层隐藏的延迟
+            enterable: true,
+            showContent: true,
+            // triggerOn: 'click',//提示框触发的条件,禁止鼠标手动
+            transitionDuration: 0,//提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
+            alwaysShowContent: true,//设置为 true 可以保证一直显示提示框内容。
+           },
           geo: {
             map: 'world',
             roam: false,
@@ -189,13 +329,6 @@
             },
             silent: false
           },
-          tooltip: {
-            show: false, //是否显示提示框组件，包括提示框浮层和 axisPointer。
-            trigger: "item", //触发类型。
-            formatter: "{b}", //提示框浮层内容格式器，支持字符串模板和回调函数两种形式。
-            padding: [5, 10],
-            transitionDuration: 0.2
-          },
           regions:[{
             selected:false
           }],
@@ -205,12 +338,18 @@
         this.myEcharts.setOption(options);
 
         this.myEcharts.hideLoading();
+        //
+        //
+        // this.myEcharts.dispatchAction({
+        //   type: "showTip", // 根据 tooltip 的配置项显示提示框。
+        //   seriesIndex: 1,
+        //   dataIndex: 0,
+        // });
 
-        window.addEventListener("resize", () => {
-          //this.myEcharts.resize();
-          //this.myEcharts = null;
-          //this.getData();
-        });
+        if(series.length > 0){
+          tools.loopShowTooltip(this.myEcharts, options, {loopSeries: true});
+        }
+
       }
     }
   };

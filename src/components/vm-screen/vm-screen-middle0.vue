@@ -23,8 +23,12 @@
           }
       },
       created(){
-        let data = this.topData.filter(item => {return item.flag});
-        this.riskData = data;
+        this.$store.dispatch('getScrenMiddle').then((resp) => {
+          if(resp)  {
+            let data = this.topData.filter(item => {return item.flag});
+            this.riskData = data;
+          }
+        });
       },
       watch:{
         'topData':function (newVal,oldVal) {

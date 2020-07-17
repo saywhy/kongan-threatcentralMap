@@ -65,10 +65,9 @@
                 let med = dk.med;
                 med += dk.high;
 
-                if(key == ''){key = '行业总数';}
-
-                reaAttr.push({name:key,high:dk.high,med:med,low:num,sum:num});
-
+                if(key != ''){
+                  reaAttr.push({name:key,high:dk.high,med:med,low:num,sum:num});
+                }
                 //修改数字
                 let id = 0;
                 if(key == '石油石化') id = 1;
@@ -77,7 +76,7 @@
                 else if(key == '水务行业') id = 4;
                 else if(key == '制造业') id = 5;
 
-                if(key != '行业总数'){
+                if(key != ''){
                   this.$store.commit('SET_TOP_LISTS_NUM',{id:id,count:num});
                 }else {
                   continue;

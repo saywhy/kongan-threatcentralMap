@@ -27,7 +27,8 @@ export default {
     data0_1: [],
     data1: [],
     data4: [],
-    data5: []
+    data5: [],
+    dataBottom:[]
   },
   getters: {
     baseInfo: state => state.baseInfo,
@@ -41,6 +42,7 @@ export default {
     data1: state => state.data1,
     data4: state => state.data4,
     data5: state => state.data5,
+    dataBottom: state => state.dataBottom,
   },
   mutations: {
     /**
@@ -153,6 +155,9 @@ export default {
     },
     SET_ASIDE_DATA_5: (state, args) => {
       state.data5 = args;
+    },
+    SET_MID_DATA_BOTTOM: (state, args) => {
+      state.dataBottom = args;
     }
   },
   actions: {
@@ -298,6 +303,46 @@ export default {
 
       if(code == 200){
         commit('SET_ASIDE_DATA_5',data);
+        return true;
+      }
+    },
+
+    /**
+     * screenMidTop
+     * */
+    async getScrenMiddle({commit,dispatch},context){
+      let resp = await axios.get('/DefaultQuery',{
+        params:{
+          key: 'keys'
+        }
+      });
+
+      let {code, data} = resp.data;
+
+      //console.log(data);
+
+      if(code == 200){
+        commit('SET_TOP_LISTS_NUM', {id: 0,count:Number(data[0].Val)});
+        return true;
+      }
+    },
+
+    /**
+     * screenMidBottom
+     * */
+    async getScrenMidBottom({commit,dispatch},context){
+      let param = this.state.screen.classition;
+      let resp = await axios.get('/random_key',{
+        params:{
+          switch: param
+        }
+      });
+      let {code, data} = resp.data;
+
+      console.log(data)
+
+      if(code == 200){
+        commit('SET_MID_DATA_BOTTOM',data);
         return true;
       }
     },

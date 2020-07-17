@@ -170,6 +170,8 @@
         this.$store.dispatch('getScrenData4');
 
         this.$store.dispatch('getScrenData5');
+
+        this.$store.dispatch('getScrenMidBottom');
       }
     }
   }

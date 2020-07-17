@@ -18,6 +18,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {mapGetters} from 'vuex'
     export default {
       name: "vm-screen-middle2",
       data(){
@@ -35,8 +36,26 @@
             ]
           }
       },
+      computed:{
+        ...mapGetters(['dataBottom']),
+      },
       created() {
-        this.getData();
+        this.$store.dispatch('getScrenMidBottom').then((resp) => {
+          if(resp)  {this.getData();}
+        });
+      },
+      watch:{
+        'dataBottom':function (newVal,oldVal) {
+          this.getData();
+
+          clearInterval(this.timers);
+
+          this.timers = setInterval(()=>{
+            this.$store.dispatch('getScrenMidBottom').then((resp) => {
+              if(resp)  {this.getData();}
+            });
+          },6000 * 4);
+        }
       },
       mounted() {
         this.timers = setInterval(()=>{
@@ -50,34 +69,22 @@
       methods:{
         //获取数据
         getData() {
-          this.$axios.get('/random_key')
-            .then((resp) => {
 
-              let {code, data} = resp.data;
-              this.itemsList = [];
+          let data = this.dataBottom;
 
-              // console.log(data)
-              //清零
-              //console.log(this.scrollers)
-              clearInterval(this.scrollers);
+          clearInterval(this.scrollers);
 
-              if(code == 200){
+          this.itemsList = [];
 
-                this.itemsList = this.sliceArray(data,3);
+          this.itemsList = this.sliceArray(data,3);
 
-                let attr = this.itemsList.slice(0,5);
+          let attr = this.itemsList.slice(0,5);
 
-               this.scrollers = setInterval(this.scroll,5000);
+          this.scrollers = setInterval(this.scroll,5000);
 
-                this.$nextTick(() => {
-                  this.drawGraph(attr);
-                });
-
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          this.$nextTick(() => {
+            this.drawGraph(attr);
+          });
         },
         drawGraph(attr) {
 

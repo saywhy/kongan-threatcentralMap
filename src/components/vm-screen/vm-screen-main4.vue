@@ -45,11 +45,11 @@
         this.trendData.xAxisData = data.map(item => {return item.Key});
         this.trendData.yAxisData = data.map(item => {return item.Val});
 
-        let lastVal = this.trendData.yAxisData.pop();
+        /*let lastVal = this.trendData.yAxisData.pop();
 
         this.$store.commit('SET_TOP_LISTS_NUM', {id: 0,count:Number(lastVal)});
 
-        this.trendData.yAxisData.push(lastVal);
+        this.trendData.yAxisData.push(lastVal);*/
 
         this.$nextTick(() => {
           this.drawGraph();

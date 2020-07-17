@@ -54,7 +54,7 @@
 
         let mapAttr = [];
 
-        console.log(attr)
+       // console.log(attr)
 
         attr.map((item) => {
          let obj = {

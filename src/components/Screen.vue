@@ -65,7 +65,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import screenfull from 'screenfull';
 
   import VmScreenAll from './vm-screen/vm-screen-all';
   import VmScreenMiddle0 from './vm-screen/vm-screen-middle0';
@@ -163,6 +162,14 @@
       /**********************************************/
       selectChanged(val){
         this.$store.commit('SET_SELECT_BY_ID',val);
+
+        this.$store.dispatch('getScrenData0_0');
+        this.$store.dispatch('getScrenData0_1');
+        this.$store.dispatch('getScrenData1');
+
+        this.$store.dispatch('getScrenData4');
+
+        this.$store.dispatch('getScrenData5');
       }
     }
   }

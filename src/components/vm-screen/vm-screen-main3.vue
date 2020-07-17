@@ -35,9 +35,7 @@
     methods: {
       //获取数据
       getData(){
-        this.$axios
-          .get('/trade').then((resp) => {
-
+        this.$axios.get('/trade').then((resp) => {
 
             let {code, data} = resp.data;
 
@@ -67,6 +65,8 @@
                 let med = dk.med;
                 med += dk.high;
 
+                if(key == ''){key = '行业总数';}
+
                 reaAttr.push({name:key,high:dk.high,med:med,low:num,sum:num});
 
                 //修改数字
@@ -77,7 +77,11 @@
                 else if(key == '水务行业') id = 4;
                 else if(key == '制造业') id = 5;
 
-                this.$store.commit('SET_TOP_LISTS_NUM',{id:id,count:num});
+                if(key != '行业总数'){
+                  this.$store.commit('SET_TOP_LISTS_NUM',{id:id,count:num});
+                }else {
+                  continue;
+                }
               }
 
               this.ranch = reaAttr.sort(this.compare("sum"));
@@ -106,12 +110,6 @@
         this.myEcharts.clear();
 
         let option = {
-          /*tooltip: {
-            trigger: 'axis',
-            axisPointer: {          // 坐标轴指示器，坐标轴触发有效
-              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-          },*/
           color: ['#60C160','#D0A13F','#D44361'],
           legend: {
             show:false

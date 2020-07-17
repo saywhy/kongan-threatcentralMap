@@ -6,7 +6,7 @@ export default {
       ScreenName:'鉴源威胁情报系统'
     },
     //下拉框类型
-    classition:'all',
+    classition:'',
     //高亮数据
     highlight: [],
     //两侧数据
@@ -22,14 +22,25 @@ export default {
       {name: '电力行业',alias:'electric', flag: false, top_id: 2,num:[0,0,0,0,0,0,0]},
       {name: '轨交行业',alias:'railTransit', flag: false, top_id: 3,num:[0,0,0,0,0,0,0]},
       {name: '水务行业',alias:'waterIndustry', flag: false, top_id: 4,num:[0,0,0,0,0,0,0]},
-      {name: '制造业',alias:'manufacturing', flag: false, top_id: 5,num:[0,0,0,0,0,0,0]}]
+      {name: '制造业',alias:'manufacturing', flag: false, top_id: 5,num:[0,0,0,0,0,0,0]}],
+    data0_0: [],
+    data0_1: [],
+    data1: [],
+    data4: [],
+    data5: []
   },
   getters: {
     baseInfo: state => state.baseInfo,
     asideLists: state => state.asideLists,
     topLists: state => state.topLists,
     classition: state => state.classition,
-    highlight: state => state.highlight
+    highlight: state => state.highlight,
+
+    data0_0: state => state.data0_0,
+    data0_1: state => state.data0_1,
+    data1: state => state.data1,
+    data4: state => state.data4,
+    data5: state => state.data5,
   },
   mutations: {
     /**
@@ -77,7 +88,7 @@ export default {
       });
       state.topLists = lists;
     },
-    SET_TOP_LISTS_NUM: (state,args) => {
+    SET_TOP_LISTS_NUM: (state, args) => {
       state.topLists.map(item => {
         if(item.top_id == args.id){
           let num = Number(args.count);
@@ -92,14 +103,16 @@ export default {
      *下拉框参数修改
      * */
     SET_SELECT_BY_ID: (state,args) => {
-      //console.log(args);
+
       let cla = state.classition;
-      if(args == 0) cla = 'all';
-      else if(args == 1) cla = 'oil';
-      else if(args == 2) cla = 'power';
-      else if(args == 3) cla = 'rail';
-      else if(args == 4) cla = 'water';
-      else if(args == 5) cla = 'industry';
+      if(args == 0) cla = '';
+      else if(args == 1) cla = '石油石化';
+      else if(args == 2) cla = '电力行业';
+      else if(args == 3) cla = '轨交行业';
+      else if(args == 4) cla = '水务行业';
+      else if(args == 5) cla = '制造业';
+      else cla = '';
+
       state.classition = cla;
 
       let topLists = state.topLists;
@@ -121,12 +134,30 @@ export default {
     SET_HIGHLIGHT_LIST: (state, args) => {
       //console.log(args);
       state.highlight = args;
+    },
+    /**
+     *
+     * 获取两侧数据列表获取两侧数据列表获取两侧数据列表获取两侧数据列表获取两侧数据列表
+     * */
+    SET_ASIDE_DATA_0_0: (state, args) => {
+      state.data0_0 = args;
+    },
+    SET_ASIDE_DATA_0_1: (state, args) => {
+      state.data0_1 = args;
+    },
+    SET_ASIDE_DATA_1: (state, args) => {
+      state.data1 = args;
+    },
+    SET_ASIDE_DATA_4: (state, args) => {
+      state.data4 = args;
+    },
+    SET_ASIDE_DATA_5: (state, args) => {
+      state.data5 = args;
     }
   },
   actions: {
     //获取大屏基础信息
-    async getScreenBase({commit,dispatch},context){
-
+    /*async getScreenBase({commit,dispatch},context){
       let resp = await axios('/yiiapi/demonstration/get-base-config',{params:context});
       let {status, data} = resp.data;
       if(status == 0){
@@ -134,9 +165,9 @@ export default {
         return true;
       }
     },
-    /**
+    /!**
      * 大屏两侧数据
-     * */
+     * *!/
     async getScreenAside({commit,dispatch},context){
       let resp = await axios('/yiiapi/demonstration/get-both-side',{params:context});
       let {status, data} = resp.data;
@@ -153,11 +184,11 @@ export default {
       if(status == 0){
         return true;
       }
-    },
+    },*/
     /**
      * 大屏顶部数据
      * */
-    async getScreenTop({commit,dispatch},context){
+    /*async getScreenTop({commit,dispatch},context){
       let resp = await axios('/yiiapi/demonstration/get-top-config',{params:context});
       let {status, data} = resp.data;
       data.forEach(item => {
@@ -173,6 +204,100 @@ export default {
       let resp = await axios.put('/yiiapi/demonstration/set-top-config',{param:topLists});
       let {status, data} = resp.data;
       if(status == 0){
+        return true;
+      }
+    },*/
+
+    /***********************************数据列表获取两侧数据列表********************************8*/
+    /**
+     * screen0_0
+     * */
+    async getScrenData0_0({commit,dispatch},context){
+      let param = this.state.screen.classition;
+
+      //let resp = await axios('/degree?switched='+params);
+      let resp = await axios.get('/DefaultQuery',{
+        params:{
+          key: 'trade',
+          switch: param
+        }
+      });
+      let {code, data} = resp.data;
+      if(code == 200){
+        commit('SET_ASIDE_DATA_0_0',data);
+        return true;
+      }
+    },
+    /**
+     * screen0_1
+     * */
+    async getScrenData0_1({commit,dispatch},context){
+      let param = this.state.screen.classition;
+
+      //let resp = await axios('/degree?switched='+params);
+      let resp = await axios.get('/DefaultQuery',{
+        params:{
+          key: 'category',
+          switch: param
+        }
+      });
+      let {code, data} = resp.data;
+
+      if(code == 200){
+        commit('SET_ASIDE_DATA_0_1',data);
+        return true;
+      }
+    },
+    /**
+     * screen1
+     * */
+    async getScrenData1({commit,dispatch},context){
+      let param = this.state.screen.classition;
+      let resp = await axios.get('/DefaultQuery',{
+        params:{
+          key: 'country',
+          switch: param
+        }
+      });
+      let {code, data} = resp.data;
+
+      if(code == 200){
+        commit('SET_ASIDE_DATA_1',data);
+        return true;
+      }
+    },
+    /**
+     * screen4
+     * */
+    async getScrenData4({commit,dispatch},context){
+      let param = this.state.screen.classition;
+      let resp = await axios.get('/DefaultQuery',{
+        params:{
+          key: 'keys',
+          switch: param
+        }
+      });
+      let {code, data} = resp.data;
+
+      if(code == 200){
+        commit('SET_ASIDE_DATA_4',data);
+        return true;
+      }
+    },
+    /**
+     * screen5
+     * */
+    async getScrenData5({commit,dispatch},context){
+      let param = this.state.screen.classition;
+      let resp = await axios.get('/high',{
+        params:{
+          switch: param
+        }
+      });
+      let {code, data} = resp.data;
+
+      if(code == 200){
+        commit('SET_ASIDE_DATA_5',data);
         return true;
       }
     },

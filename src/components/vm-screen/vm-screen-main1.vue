@@ -23,6 +23,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { mapGetters } from 'vuex'
   export default {
     name: "vm-screen-main1",
     data(){
@@ -31,13 +32,18 @@
         progress_list:[/*{Key:"US",Name:"美国", Val: 18918}*/]
       }
     },
-    created() {
-      this.getData();
+    computed:{
+      ...mapGetters(['data1'])
     },
-    mounted() {
-    /*  this.timers = setInterval(()=>{
+    created() {
+      this.$store.dispatch('getScrenData1').then((resp) => {
+        if(resp)  {this.getData();}
+      });
+    },
+    watch:{
+      'data1':function (newVal,oldVal) {
         this.getData();
-      },10000 * 30);*/
+      }
     },
     destroyed(){
       clearInterval(this.timers);
@@ -45,41 +51,26 @@
     methods:{
       //获取数据
       getData() {
-        this.$axios
-          .get('/country').then((resp) => {
+        let allNum = 0;
 
-            //console.log(resp)
+        let data = this.data1;
 
-            let {code, data} = resp.data;
+        data.map(item => {
+          allNum += Number(item.Val);
+        });
 
-            let allNum = 0;
+        data.map(item => {
 
-            if(code == 200){
+          let alias = item.Key.toLowerCase();
 
-              data.map(item => {
-                allNum += Number(item.Val);
-              });
+          item.count = (((Number(item.Val)/allNum)) * 100).toFixed(0);
 
+          item.count = Number(item.count);
 
-              data.map(item => {
+          Object.assign(item,{alias:alias});
+        });
 
-                let alias = item.Key.toLowerCase();
-
-                item.count = (((Number(item.Val)/allNum)) * 100).toFixed(0);
-
-                item.count = Number(item.count);
-
-                Object.assign(item,{alias:alias});
-              });
-
-              this.progress_list = data;
-            }
-          })
-          .catch((error) => {
-
-            console.log(error);
-
-          });
+        this.progress_list = data;
       },
 
       //获取国旗类名

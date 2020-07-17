@@ -33,6 +33,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { mapGetters } from 'vuex'
   export default {
     name: "vm-screen-main2",
     data(){
@@ -47,13 +48,13 @@
         }]
       }
     },
-    created() {
-      this.getData();
+    computed:{
+      ...mapGetters(['data0_1'])
     },
-    mounted() {
-      /*this.timers = setInterval(()=>{
+    watch:{
+      'data0_1':function (newVal,oldVal) {
         this.getData();
-      },10000 * 30);*/
+      }
     },
     destroyed(){
       clearInterval(this.timers);
@@ -61,34 +62,21 @@
     methods:{
       //获取数据
       getData(){
-        this.$axios
-          .get('/category').then((resp) => {
+        this.info = [];
 
-            this.info = [];
+        let data = this.data0_1;
 
-            let {code, data} = resp.data;
+        for(var key of data){
+          this.info.push({name: key.Key, count: key.Val});
+        }
+        //console.log(this.info)
 
-            if(code == 200){
-
-              //console.log(data);
-
-              Object.keys(data).forEach((key) => {
-                this.info.push({name:key,count:data[key]});
-              });
-
-              if(this.info.length > 5){
-                this.info = this.info.splice(0,5);
-              }
-
-              //console.log(this.info);
-              this.$nextTick(function() {
-                this.drawGraph();
-              });
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        if(this.info.length > 5){
+          this.info = this.info.splice(0,5);
+        }
+        this.$nextTick(function() {
+          this.drawGraph();
+        });
       },
       drawGraph(){
 

@@ -19,53 +19,20 @@
           return {
             topFlag: true,
             timers: null,
-            //riskData: []
+            riskData: []
           }
       },
-      computed:{
-        riskData:{
-          get(){
-            return this.$store.getters.topLists.filter(item => { return item.flag == true; });
-          },
-          set(val){}
-        }
-      },
       created(){
-        //this.getData();
+        let data = this.topData.filter(item => {return item.flag});
+        this.riskData = data;
       },
-      mounted() {
-        /*this.timers = setInterval(()=>{
-          this.getData();
-        },10000 * 30);*/
+      watch:{
+        'topData':function (newVal,oldVal) {
+          this.riskData = newVal.filter(item => {return item.flag});
+        }
       },
       destroyed(){
         clearInterval(this.timers);
-      },
-      methods:{
-        //获取数据
-        getData() {
-          this.$axios.get('/yiiapi/demonstration/top-count')
-
-            .then((resp) => {
-
-              this.riskData = [];
-
-              this.topFlag = false;
-
-              let {status, data} = resp.data;
-
-              if (status == 0) {
-               this.$store.commit('SET_TOP_LISTS_NUM', data);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        },
-        //顶部内容点击删除
-        topdelClick(id){
-          this.$store.commit('SET_TOP_LISTS_ID', {id,id,flag:false});
-        },
       }
     }
 </script>

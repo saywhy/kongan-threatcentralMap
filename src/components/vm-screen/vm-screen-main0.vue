@@ -19,50 +19,55 @@
 
 <script type="text/ecmascript-6">
   require('../../../static/js/echarts-auto-tooltip');
+  import { mapGetters } from 'vuex'
   export default {
       name: "vm-screen-main0",
       data() {
           return {
-            timers:null,
+            timers: null,
             degree:[],
             legendDegree:[],
             category:[],
             legendCategory:[]
           }
       },
-      created() {
-        this.getDegree();
-        this.getCateory();
+      computed:{
+        ...mapGetters(['data0_0','data0_1'])
       },
-      mounted() {
-       /* this.timers = setInterval(()=>{
-          this.getData();
-        },10000 * 30);*/
+      created() {
+        this.$store.dispatch('getScrenData0_0').then((resp) => {
+          if(resp)  {this.getDegree();}
+        });
+        this.$store.dispatch('getScrenData0_1').then((resp) => {
+          if(resp)  {this.getCateory();}
+        });
+      },
+      watch:{
+        'data0_0':function (newVal,oldVal) {
+          this.getDegree();
+        },
+        'data0_1':function (newVal,oldVal) {
+          this.getCateory();
+        }
       },
       destroyed(){
         clearInterval(this.timers);
       },
       methods:{
-        //获取数据
-        getDegree(){
-          this.$axios.get('/degree')
-            .then((resp) => {
+        //等级
+        getDegree() {
 
-              this.degree = [];
+          this.degree = [];
+          this.legendDegree = [];
 
-              let {code, data} = resp.data;
-
-              if(code == 200){
-                for(var key in data){
-                  this.degree.push({degree: key, count: data[key]});
-                }
-                this.$nextTick(function() {
-                  this.drawDegree();
-                });
-              }
-          })
-            .catch((error) => {
-            console.log(error);
+          let data = this.data0_0;
+          for(var key of data){
+            if(key.Name != ''){
+              this.degree.push({degree: key.Key, count: key.Val});
+            }
+          }
+          this.$nextTick(function() {
+            this.drawDegree();
           });
         },
         drawDegree() {
@@ -190,29 +195,22 @@
             myEcharts.resize();
           });
         },
+        //类型
         getCateory() {
-          this.$axios.get('/category')
-            .then((resp) => {
+          this.category = [];
+          this.legendCategory = [];
 
-              //console.log(resp)
+          let data = this.data0_1;
 
-              this.category = [];
+          for(var key of data){
+            if(key.Name != ''){
+              this.category.push({category: key.Key, count: key.Val});
+            }
+          }
 
-              let {code, data} = resp.data;
-
-              if(code == 200){
-
-                for(var key in data){
-                  this.category.push({category: key, count: data[key]});
-                }
-                this.$nextTick(function() {
-                  this.drawCategory();
-                });
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          this.$nextTick(function() {
+            this.drawCategory();
+          });
         },
         drawCategory() {
           let categories = this.category;
@@ -253,7 +251,7 @@
               bottom: "5%",
               containLabel: true
             },
-            color: ["#8DF97F", "#9C00E5", "#0E79FF", "#FF35C1", "#BECE2A"],
+            color: ["#8DF97F", "#9C00E5", "#0E79FF", "#FF35C1", "#BECE2A", '#0E79FF', '#41B3F9', '#962116', '#4AA46E','#AE5BD5'],
             series: [
               {
                 name: "威胁类型分布",

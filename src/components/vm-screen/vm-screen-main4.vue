@@ -5,6 +5,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { mapGetters } from 'vuex'
   export default {
     name: "vm-screen-main4",
     data(){
@@ -16,13 +17,18 @@
         }
       }
     },
-    created() {
-      this.getData();
+    computed:{
+      ...mapGetters(['data4'])
     },
-    mounted() {
-      /*this.timers = setInterval(()=>{
+    created() {
+      this.$store.dispatch('getScrenData4').then((resp) => {
+        if(resp)  {this.getData();}
+      });
+    },
+    watch:{
+      'data4':function (newVal,oldVal) {
         this.getData();
-      },10000 * 30);*/
+      }
     },
     destroyed(){
       clearInterval(this.timers);
@@ -30,31 +36,24 @@
     methods:{
       //获取数据
       getData() {
-        this.$axios.get('/keys')
-          .then((resp) => {
 
-            //console.log(resp);
-            let {code, data} = resp.data;
+        let data = this.data4;
 
-            if(code == 200){
+        /*this.trendData.xAxisData = Object.keys(data);
+        this.trendData.yAxisData = Object.values(data);*/
 
-              this.trendData.xAxisData = Object.keys(data);
-              this.trendData.yAxisData = Object.values(data);
+        this.trendData.xAxisData = data.map(item => {return item.Key});
+        this.trendData.yAxisData = data.map(item => {return item.Val});
 
-              let lastVal = this.trendData.yAxisData.pop();
+        let lastVal = this.trendData.yAxisData.pop();
 
-              this.$store.commit('SET_TOP_LISTS_NUM',{id:0,count:Number(lastVal)});
+        this.$store.commit('SET_TOP_LISTS_NUM', {id: 0,count:Number(lastVal)});
 
-              this.trendData.yAxisData.push(lastVal);
+        this.trendData.yAxisData.push(lastVal);
 
-              this.$nextTick(() => {
-                this.drawGraph();
-              })
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        this.$nextTick(() => {
+          this.drawGraph();
+        })
       },
       //地图tooptip样式
       tipFormatter(prams){
@@ -160,7 +159,6 @@
               }
             },
             emphasis:{
-
               show:false
             },
             data: this.trendData.yAxisData

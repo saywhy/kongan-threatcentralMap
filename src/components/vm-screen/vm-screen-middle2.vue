@@ -2,40 +2,6 @@
     <div class="vm-screen-middle2">
       <div class="block-all">
         <div class="flow" id="box">
-          <!--<div id="scroll-message" class="scroll-message-style">
-             <ul>
-              <li class="scroll-item">
-               <button class="item">MAL:A07DA897FDE02</button>
-               <button class="item">URL:www.baddoddmm.com</button>
-               <button class="item">URL:www.baddomm.com</button>
-               <button class="item">IP:123.45.67.89</button>
-              </li>
-              <li class="scroll-item">
-               <button class="item">MAL:A07DA897FDE02</button>
-               <button class="item">IP:123.45.67.89</button>
-               <button class="item">MAL:A07DA897FDE02</button>
-               <button class="item">URL:www.baddoddmm.com</button>
-              </li>
-              <li class="scroll-item">
-              <button class="item">MAL:A07DA897FDE02</button>
-              <button class="item">URL:www.baddoddmm.com</button>
-              <button class="item">URL:www.baddomm.com</button>
-              <button class="item">IP:123.45.67.89</button>
-              </li>
-              <li class="scroll-item">
-              <button class="item">MAL:A07DA897FDE02</button>
-              <button class="item">IP:123.45.67.89</button>
-              <button class="item">MAL:A07DA897FDE02</button>
-              <button class="item">URL:www.baddoddmm.com</button>
-              </li>
-              <li class="scroll-item">
-                <button class="item">MAL:A07DA897FDE02</button>
-                <button class="item">URL:www.baddoddmm.com</button>
-                <button class="item">URL:www.baddomm.com</button>
-                <button class="item">IP:123.45.67.89</button>
-              </li>
-             </ul>
-          </div>-->
           <ul class="box-list" :class="{anim:animate == true}">
             <li v-for="(item,index) in itemsList" :key="index" class="li-item">
               <button class="item" v-for="(it,idx) in item"

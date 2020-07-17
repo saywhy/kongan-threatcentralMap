@@ -25,24 +25,32 @@
       }
     },
     computed:{
-      ...mapGetters(['classition']),
+      ...mapGetters(['data5']),
     },
     created() {
-      this.getData();
+      this.$store.dispatch('getScrenData5').then((resp) => {
+        if(resp)  {this.getData();}
+      });
+    },
+    watch:{
+      'data5':function (newVal,oldVal) {
+        this.getData();
+
+        clearInterval(this.timers);
+
+        this.timers = setInterval(()=>{
+          this.$store.dispatch('getScrenData5').then((resp) => {
+            if(resp)  {this.getData();}
+          });
+        },10000);
+      }
     },
     mounted() {
       this.timers = setInterval(()=>{
-        this.getData();
+        this.$store.dispatch('getScrenData5').then((resp) => {
+          if(resp)  {this.getData();}
+        });
       },10000);
-    },
-    watch:{
-      classition:function(val,newVal){
-        clearInterval(this.timers);
-        this.getData();
-        this.timers = setInterval(()=>{
-          this.getData();
-        },10000);
-      }
     },
     destroyed(){
       clearInterval(this.timers);
@@ -50,29 +58,15 @@
     methods: {
       //获取数据
       getData() {
-
-        this.$axios.get('/high?switch='+this.classition)
-
-          .then((resp) => {
-
-            this.tableData = [];
-
-            let {code, data} = resp.data;
-
-            if (code == 200) {
-              //this.tableData = data;
-              for (var value of data) {
-                for (var val in value) {
-                  let vk = value[val];
-                  this.tableData.push({IOC:val,category:vk.category[0],country:vk.country});
-                }
-              }
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      },
+        this.tableData = [];
+        let data = this.data5;
+        for (var value of data) {
+          for (var val in value) {
+            let vk = value[val];
+            this.tableData.push({IOC:val,category:vk.category[0],country:vk.country});
+          }
+        }
+      }
     }
   }
 </script>

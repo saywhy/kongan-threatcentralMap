@@ -15,7 +15,7 @@ import './assets/css/index.css'
 // 引入axios
 import axios from 'axios'
 Vue.prototype.$axios = axios;
-axios.defaults.baseURL = '/pin/';
+axios.defaults.baseURL = '/gin/';
 
 // 引入echarts
 import echarts from 'echarts';

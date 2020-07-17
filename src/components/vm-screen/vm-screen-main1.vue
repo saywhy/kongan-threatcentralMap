@@ -95,11 +95,10 @@
     padding: 0 16px 10px 16px;
     .vm-progress-list{
       height: auto;
-      margin-top: 6px;
       margin-right: 6px;
       .item{
         display: flex;
-        line-height: 48px;
+        line-height: 50px;
         .pgress-item{
           width: 40px;
           .progress-img{

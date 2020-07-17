@@ -16,8 +16,8 @@
         <!--<el-button type="primary" class="e_btn e_btn_quit"
                    icon="el-icon-switch-button" @click="quitScreen();">退出</el-button>-->
         <el-button type="primary" class="e_btn" @click="fullScreen();">
-          <span v-if="!isFullscreen"><i class="full"></i><span class="name">全屏</span></span>
-          <span v-if="isFullscreen"><i class="refull"></i><span class="name">退出全屏</span></span>
+          <span v-if="!isFull"><i class="full"></i><span class="name">全屏</span></span>
+          <span v-if="isFull"><i class="refull"></i><span class="name">退出全屏</span></span>
         </el-button>
       </div>
     </div>
@@ -83,7 +83,7 @@
     },
     data() {
       return {
-        isFullscreen: false,
+        isFull:false,
         threatEyeName: '鉴源威胁情报系统',
         selectFlag:false,
         selectVal:0,
@@ -108,45 +108,61 @@
 
     },
     mounted() {
-      window.onresize = () => {
-        // 全屏下监控是否按键了ESC
-        if (!this.checkFull()) {
-          // 全屏下按键esc后要执行的动作
-          this.isFullscreen = false;
-          //this.isFullscreen = !this.isFullscreen;
-        }
-      }
+      this.escFullScreen();
     },
     methods: {
-      //退出
-      quitScreen() {
-        this.$router.push({path: '/home/overview'});
-      },
-      //设置
-      setScreen() {
-        this.$router.push({path: '/screen/set/base', query: {num: '0'}});
-      },
-      //全屏
+      //全屏事件
       fullScreen() {
-        screenfull.toggle();
-        this.isFullscreen = !this.isFullscreen;
+        let el = document.documentElement;
+        if (this.isFull) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        } else {
+          if (el.requestFullscreen) {
+            el.requestFullscreen();
+          } else if (el.mozRequestFullScreen) {
+            el.mozRequestFullScreen();
+          } else if (el.webkitRequestFullScreen) {
+            el.webkitRequestFullScreen();
+          } else if (el.msRequestFullscreen) {
+            el.msRequestFullscreen();
+          }
+        }
       },
       //ESC键
-      checkFull() {
-        var isFull = document.fullscreenEnabled ||
-          window.fullScreen || document.webkitIsFullScreen ||
-          document.msFullscreenEnabled
-        // to fix : false || undefined == undefined
-        if (isFull === undefined) {
-          isFull = false
-        }
-        return isFull
+      escFullScreen() {
+        let isFullscreen =
+          document.fullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement ||
+          document.fullScreen ||
+          document.mozFullScreen ||
+          document.webkitIsFullScreen;
+        isFullscreen = !!isFullscreen;
+        let that = this;
+        document.addEventListener("fullscreenchange", () => {
+          that.isFull = !that.isFull;
+        });
+        document.addEventListener("mozfullscreenchange", () => {
+          that.isFull = !that.isFull;
+        });
+        document.addEventListener("webkitfullscreenchange", () => {
+          that.isFull = !that.isFull;
+        });
+        document.addEventListener("msfullscreenchange", () => {
+          that.isFull = !that.isFull;
+        });
       },
       /**********************************************/
       selectChanged(val){
-
         this.$store.commit('SET_SELECT_BY_ID',val);
-
       }
     }
   }
@@ -190,6 +206,7 @@
                 border-radius: 5px;
                 margin-top: 24px;
                 font-size: 14px;
+                text-align: center;
                 background-image: radial-gradient(49% 87%, rgba(10,113,255,0.42) 5%,
                 rgba(10,113,255,0.12) 88%, rgba(10,113,255,0.12) 88%);
                 &::-webkit-input-placeholder { /* WebKit browsers */
@@ -222,7 +239,7 @@
                   color: #fff;
                   font-family: PingFangSC-Regular;
                   /*border: 1px solid #082754;*/
-                  text-align: left;
+                  text-align: center;
                   padding: 0 10px;
                   &:hover{
                     background: #3882FF;

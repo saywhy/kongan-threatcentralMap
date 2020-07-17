@@ -181,9 +181,9 @@
 
 <style scoped lang="less">
   .vm-screen-main4{
-    padding: 0 16px 10px 16px;
+    padding: 10px 16px 10px 16px;
     #trend{
-      height: 250px;
+      height: 230px;
       width: 100%;
     }
   }

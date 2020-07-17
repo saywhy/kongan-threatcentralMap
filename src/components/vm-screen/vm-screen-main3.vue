@@ -118,7 +118,7 @@
           },
           grid: {
             top:'0',
-            left: '-10%',
+            left: '-12%',
             right: '0',
             bottom: '-8%',
             containLabel: true

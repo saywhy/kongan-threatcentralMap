@@ -219,7 +219,7 @@
 
           this.legendCategory = [];
 
-          let colorAttr = ["#8DF97F", "#9C00E5", "#0E79FF", "#FF35C1", "#BECE2A"];
+          //let colorAttr = ["#8DF97F","#9C00E5","#0E79FF","#FF35C1","#BECE2A"];
 
           if(categories){
             categories.filter((item,index) => {

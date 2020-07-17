@@ -528,14 +528,14 @@
 
 <style scoped lang="less">
   .vm-screen-main2{
-    padding: 0 16px 10px 16px;
+    padding: 14px 16px 10px 16px;
     .attention{
       .item{
         display: flex;
         width: 100%;
-        height: 40px;
-        line-height: 40px;
-        margin-bottom: 10px;
+        height: 38px;
+        line-height: 38px;
+        margin-bottom: 8px;
         .name{
           flex: 1;
           color: #fff;

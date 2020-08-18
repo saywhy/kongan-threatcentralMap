@@ -321,8 +321,14 @@ export default {
 
       //console.log(data);
 
+      if(data == '' || data == undefined || data.length == 0){
+        return false;
+      }
+
+      let res = Number(data[data.length - 1].Val);
+
       if(code == 200){
-        commit('SET_TOP_LISTS_NUM', {id: 0,count:Number(data[0].Val)});
+        commit('SET_TOP_LISTS_NUM', {id: 0,count:res});
         return true;
       }
     },

@@ -14,7 +14,7 @@
         myEcharts:null,
         loading:true,
         mapData:[{first_seen: "2013-07-03 11:17",
-          name: "updatelivez.redirectme.net",
+          name: "updatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivezupdatelivez",
           type: "alert",
           des:{IP:"194.62.182.53"},
           category:{0: "僵尸网络C&C"},
@@ -48,13 +48,11 @@
         //console.log(this.highlight)
         let series = [];
 
-       // let attr = this.mapData;
+        //let attr = this.mapData;
 
         let attr = this.highlight;
 
         let mapAttr = [];
-
-       // console.log(attr)
 
         attr.map((item) => {
          let obj = {
@@ -93,16 +91,38 @@
                  // alwaysShowContent: true,//设置为 true 可以保证一直显示提示框内容。
                  extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
                  formatter: function (params, ticket, callback) {
+                   //' + params.data.name + '
                    // console.log(params);
                    //根据业务自己拓展要显示的内容
-                   var toolTiphtml = '<div style="z-index: 9999">' +
-                     '<p style="text-align: left;"> 指标:' +
-                     params.data.name +
-                     '</p > <p style="text-align:left;"> 威胁类型 :' +
+
+                   let str = params.data.name;
+
+                   var strArr = [];
+
+                   if(str){
+                     var n = 24;
+                     for (var i = 0, l = str.length; i < l/n; i++) {
+                       var a = str.slice(n*i, n*(i+1));
+                       strArr.push(a);
+                     }
+                   }
+                   let strHtml = ''
+                   strArr.forEach((item,key) => {
+                     if(key == 0){
+                       strHtml = '<p style="text-align:left;">指标：' +item + '</p> ';
+                     }else {
+                       strHtml += '<p style="text-align:left;margin-left: 40px;">' +item + '</p> ';
+                     }
+                   });
+
+                   var toolTiphtml = strHtml +
+                     '<p style="text-align:left;"> 威胁类型：' +
                      params.data.catergory +
-                     '</p > <p style="text-align: left;">首次发现时间:' +
+                     '</p > ' +
+                     '<p style="text-align: left;">首次发现时间：' +
                      params.data.first_seen +
                      '</div>';
+
                    return toolTiphtml;
                  }
                },

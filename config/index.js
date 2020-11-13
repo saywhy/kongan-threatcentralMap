@@ -11,8 +11,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        //target: 'https://192.168.1.245/', // 后台api
-        target: 'http://118.190.217.206:5005/', // 后台api
+        target: 'http://112.126.103.26/', // 后台api
+        // target: 'http://118.190.217.206:5005/', // 后台api
         changeOrigin: true, //是否跨域
         secure: false,
         pathRewrite: {
@@ -52,17 +52,17 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, "../map"),
     assetsSubDirectory: "mapStatic",
     assetsPublicPath: "/",
-   /* // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    /* // Template for index.html
+     index: path.resolve(__dirname, '../dist/index.html'),
 
-    // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+     // Paths
+     assetsRoot: path.resolve(__dirname, '../dist'),
+     assetsSubDirectory: 'static',
+     assetsPublicPath: '/',
 
-    /!**
-     * Source Maps
-     *!/*/
+     /!**
+      * Source Maps
+      *!/*/
 
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production

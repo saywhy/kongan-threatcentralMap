@@ -16,6 +16,7 @@ import './assets/css/index.css'
 import axios from 'axios'
 Vue.prototype.$axios = axios;
 axios.defaults.baseURL = '/gin/';
+// axios.defaults.baseURL = '/api/gin/';
 
 // 引入echarts
 import echarts from 'echarts';
@@ -36,6 +37,8 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })
